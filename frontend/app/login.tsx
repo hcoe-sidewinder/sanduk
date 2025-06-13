@@ -1,8 +1,9 @@
+import InputField from "@/components/InputField";
+import { Link } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   Image,
   TouchableOpacity,
   ScrollView,
@@ -11,25 +12,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const InputField = ({ label, value, onChangeText, placeholder, secure = false }:{label: string, value: string, onChangeText: (text:string)=> void, placeholder:string, secure: boolean}) => {
-  return (
-    <View className="mb-5">
-      <Text className="mb-2 font-semibold text-gray-700 text-base">
-        {label} <Text className="text-red-500">*</Text>
-      </Text>
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor="#9ca3af"
-        secureTextEntry={secure}
-        className="border-2 border-gray-200 rounded-xl bg-gray-50 p-4 text-base text-gray-900 min-h-[50px]"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
-    </View>
-  );
-};
 
 export default function LoginScreen() {
   const [documentId, setDocumentId] = useState<string>("");
@@ -122,7 +104,7 @@ export default function LoginScreen() {
                 <Text className="text-blue-500 text-sm">Forgot Password?</Text>
               </TouchableOpacity>
               <TouchableOpacity>
-                <Text className="text-gray-500 text-sm">Need to Signup?</Text>
+                <Link href="/signup" className="text-gray-500 text-sm">Need to Signup?</Link>
               </TouchableOpacity>
             </View>
           </View>
