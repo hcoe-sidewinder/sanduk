@@ -1,4 +1,14 @@
 import mongoose, { type Document } from "mongoose";
+import {
+  Sex,
+  ALL_SEX,
+  Bloodtype,
+  ALL_BLOOD_TYPE,
+  Role,
+  ALL_ROLE,
+  RelationToFamilyAdmin,
+  ALL_RELATION_TO_FAMILY_ADMIN,
+} from "./types/user";
 
 // Define an interface for the User document to provide type safety
 export interface IUser extends Document {
@@ -6,33 +16,18 @@ export interface IUser extends Document {
   nidImg: string;
   password: string;
   dob: Date;
-  sex: "MALE" | "FEMALE" | "OTHER";
+  sex: Sex;
   name: string;
-  bloodtype: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
-  role: "FAMILY_ADMIN" | "MEMBER";
-  isDoctor: boolean;
+  bloodtype: Bloodtype;
+  role?: Role;
+  isDoctor?: boolean;
   doctorDetails?: {
     specialty: string;
     licenseNumber: string;
     clinicAddress: string;
   };
   familyAdmin?: mongoose.Types.ObjectId;
-  relationshipToFamilyAdmin?:
-    | "FATHER"
-    | "MOTHER"
-    | "SON"
-    | "DAUGHTER"
-    | "BROTHER"
-    | "SISTER"
-    | "PARTNER"
-    | "GRANDFATHER"
-    | "GRANDMOTHER"
-    | "GRANDSON"
-    | "GRANDDAUGHTER"
-    | "GREATGRANDFATHER"
-    | "GREATGRANDMOTHER";
-  createdAt: Date;
-  updatedAt: Date;
+  relationToFamilyAdmin?: RelationToFamilyAdmin;
 }
 
 const userSchema = new mongoose.Schema(
@@ -59,7 +54,7 @@ const userSchema = new mongoose.Schema(
     },
     sex: {
       type: String,
-      enum: ["MALE", "FEMALE", "OTHER"],
+      enum: ALL_SEX,
       required: [true, "Sex is required"],
     },
     name: {
@@ -69,12 +64,12 @@ const userSchema = new mongoose.Schema(
     },
     bloodtype: {
       type: String,
-      enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+      enum: ALL_BLOOD_TYPE,
       required: [true, "Blood type is required"],
     },
     role: {
       type: String,
-      enum: ["FAMILY_ADMIN", "MEMBER"],
+      enum: ALL_ROLE,
       default: "MEMBER",
       required: [true, "User role is required"],
     },
@@ -114,23 +109,9 @@ const userSchema = new mongoose.Schema(
         return this.role === "MEMBER";
       },
     },
-    relationshipToFamilyAdmin: {
+    relationToFamilyAdmin: {
       type: String,
-      enum: [
-        "FATHER",
-        "MOTHER",
-        "SON",
-        "DAUGHTER",
-        "BROTHER",
-        "SISTER",
-        "PARTNER",
-        "GRANDFATHER",
-        "GRANDMOTHER",
-        "GRANDSON",
-        "GRANDDAUGHTER",
-        "GREATGRANDFATHER",
-        "GREATGRANDMOTHER",
-      ],
+      enum: ALL_RELATION_TO_FAMILY_ADMIN,
       required: function (this: IUser) {
         return this.role === "MEMBER";
       },
