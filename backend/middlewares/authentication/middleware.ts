@@ -7,6 +7,7 @@ import type { Request, Response, NextFunction } from "express";
 import { Logger } from "../../common/logger";
 import { HTTP401Error } from "../../common/errors";
 import jwt from "jsonwebtoken";
+import { config } from "../../common/config";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -57,7 +58,7 @@ export const verifyToken: Middleware = (req: Request, _res: Response, next: Next
 
   try {
     // @ts-expect-error: *
-    req.userContext = jwt.verify(token, Config.jwt.secretKey) as UserContext;
+    req.userContext = jwt.verify(token, config.jwt.secretKey) as UserContext;
   } catch (error) {
     switch (true) {
       case error instanceof jwt.TokenExpiredError:
