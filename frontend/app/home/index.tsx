@@ -2,7 +2,7 @@ import React from "react";
 import { ScrollView, Text, StyleSheet } from "react-native";
 import DataTimeline from "@/components/DataTimeline";
 import mockTimelineData from "@/constants/MockTimelineData";
-import  {familyTreeData}  from "@/constants/MockFamilyTreeData";
+import { familyTreeData } from "@/constants/MockFamilyTreeData";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FamilyTree from "@/components/HereditaryTree";
 
