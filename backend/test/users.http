@@ -3,7 +3,7 @@
 @port = 5173
 
 
-### addUser
+### addFamilyAdmin
 
 POST /users HTTP/1.1
 Accept: application/json
@@ -19,6 +19,26 @@ Host: {{host}}
   "name": "Anshu Gahire",
   "bloodtype": "A+",
   "role": "FAMILY_ADMIN"
+}
+
+### addMember
+
+POST /users HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "nidNo": "aslkdjasdasd",
+  "nidImg": "aslkdjasldkj",
+  "password": "password",
+  "dob": "2003-11-05",
+  "sex": "male",
+  "name": "Anshu Gahire",
+  "bloodtype": "A+",
+  "role": "MEMBER",
+  "familyAdmin": "684c65c53413251cb28bdfc8",
+  "relationToFamilyAdmin": "MOTHER"
 }
 
 ### getUsers

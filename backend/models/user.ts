@@ -77,30 +77,30 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    doctorDetails: {
-      specialty: {
-        type: String,
-        required: function (this: IUser) {
-          return this.isDoctor;
-        },
-      },
-      licenseNumber: {
-        type: String,
-        required: function (this: IUser) {
-          return this.isDoctor;
-        },
-        unique: function (this: IUser) {
-          return this.isDoctor;
-        }, // License numbers should be unique for doctors
-        trim: true,
-      },
-      clinicAddress: {
-        type: String,
-        required: function (this: IUser) {
-          return this.isDoctor;
-        }, // Type 'this'
-      },
-    },
+    // doctorDetails: {
+    //   specialty: {
+    //     type: String,
+    //     required: function (this: IUser) {
+    //       return this.isDoctor;
+    //     },
+    //   },
+    //   licenseNumber: {
+    //     type: String,
+    //     required: function (this: IUser) {
+    //       return this.isDoctor;
+    //     },
+    //     unique: function (this: IUser) {
+    //       return this.isDoctor;
+    //     }, // License numbers should be unique for doctors
+    //     trim: true,
+    //   },
+    //   clinicAddress: {
+    //     type: String,
+    //     required: function (this: IUser) {
+    //       return this.isDoctor;
+    //     }, // Type 'this'
+    //   },
+    // },
     familyAdmin: {
       // This field will store the ObjectId of the FAMILY_ADMIN user who manages this member
       type: mongoose.Schema.Types.ObjectId,
@@ -113,7 +113,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ALL_RELATION_TO_FAMILY_ADMIN,
       required: function (this: IUser) {
-        return this.role === "MEMBER";
+        return this.familyAdmin;
       },
     },
   },
