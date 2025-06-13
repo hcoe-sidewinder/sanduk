@@ -1,0 +1,29 @@
+@host = http://{{hostname}}:{{port}}/api
+@hostname = localhost
+@port = 5173
+
+
+### addUser
+
+POST /users HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "nidNo": "aslkdjasldkj",
+  "nidImg": "aslkdjasldkj",
+  "password": "password",
+  "dob": "2003-11-05",
+  "sex": "male",
+  "name": "Anshu Gahire",
+  "bloodtype": "A+",
+  "role": "FAMILY_ADMIN"
+}
+
+### getUsers
+
+GET /users HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
