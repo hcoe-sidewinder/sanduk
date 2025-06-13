@@ -6,10 +6,10 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Response {
-      readonly dataResponse: <T>(data: T, message: string, status: HTTPStatus, errors?: unknown) => void;
-      readonly success: <T>(data: T, message?: string, status?: HTTPStatus) => void;
+      readonly dataResponse: <T>(data: T, message: Message, status: HTTPStatus, errors?: unknown) => void;
+      readonly success: <T>(data: T, message?: Message, status?: HTTPStatus) => void;
       readonly error: (message: string, status?: HTTPStatus, errors?: unknown) => void;
-      readonly empty: (status?: HTTPStatus, message?: string) => void;
+      readonly empty: (message?: Message, status?: HTTPStatus) => void;
     }
   }
 }
@@ -29,7 +29,7 @@ export interface DataResponse<T> {
 
 export const dataResponse = () => (request: Request, response: Response, next: NextFunction) => {
   // @ts-expect-error: *
-  response.dataResponse = <T>(data: T, message: string, status: number, errors?: unknown) => {
+  response.dataResponse = <T>(data: T, message: Message, status: HTTPStatus, errors?: unknown) => {
     const error = errors ? { meta: errors } : undefined;
 
     response.status(status).send({
@@ -44,7 +44,7 @@ export const dataResponse = () => (request: Request, response: Response, next: N
   };
 
   // @ts-expect-error: *
-  response.success = <T>(data: T, message = Message.SUCCESS, status: number) => {
+  response.success = <T>(data: T, message = Message.SUCCESS, status: HTTPStatus = HTTPStatus.SUCCESS) => {
     if (status) response.status(status);
 
     response.send({
@@ -58,13 +58,13 @@ export const dataResponse = () => (request: Request, response: Response, next: N
   };
 
   // @ts-expect-error: *
-  response.empty = (status: HTTPStatus = HTTPStatus.SUCCESS, message: string = Message.SUCCESS) => {
+  response.empty = (message: Message = Message.SUCCESS, status: HTTPStatus = HTTPStatus.SUCCESS) => {
     response.success(undefined, message, status);
   };
 
   // @ts-expect-error: *
   response.error = (
-    message: string = Message.BAD_REQUEST,
+    message: Message = Message.BAD_REQUEST,
     status: HTTPStatus = HTTPStatus.BAD_REQUEST,
     errors: unknown | undefined,
   ) => {
