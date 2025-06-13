@@ -36,4 +36,4 @@ const labReportSchema = new mongoose.Schema(
 
 labReportSchema.index({ patient: 1, date: -1 });
 
-export const LapReport = mongoose.model("LabReport", labReportSchema);
+export const LabReport = mongoose.model("LabReport", labReportSchema);

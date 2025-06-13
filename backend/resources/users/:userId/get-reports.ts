@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { get, type Resource, type Validators } from "../../lib/resources";
-import { LapReport } from "../../../models/lab-report";
+import { LabReport } from "../../../models/lab-report";
 import { checkSchema, matchedData } from "express-validator";
 import { Message } from "../../../common/messages";
 import type mongoose from "mongoose";

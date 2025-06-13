@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { post, type Resource, type Validators } from "../../lib/resources";
 import { hasPermission } from "../../lib/access-contorl/abac";
 import { HTTP403Error } from "../../../common/errors";
-import { LapReport, type ILabReport } from "../../../models/lab-report";
+import { LabReport, type ILabReport } from "../../../models/lab-report";
 import { checkSchema, matchedData } from "express-validator";
 import { Message } from "../../../common/messages";
 import type mongoose from "mongoose";
