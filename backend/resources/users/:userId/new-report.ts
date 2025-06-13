@@ -5,13 +5,19 @@ import { HTTP403Error } from "../../../common/errors";
 import { LabReport, type ILabReport } from "../../../models/lab-report";
 import { checkSchema, matchedData } from "express-validator";
 import { Message } from "../../../common/messages";
-import type mongoose from "mongoose";
+import mongoose from "mongoose";
 
 const validators: Validators = checkSchema({
   userId: {
     in: "params",
-    isMongoId: {
-      errorMessage: Message.NOT_A_MONGOID,
+    custom: {
+      options: (value: string) => {
+        if (value === "@me") {
+          return true;
+        }
+        return mongoose.Types.ObjectId.isValid(value);
+      },
+      errorMessage: Message.NOT_A_MONGOID_OR_ME,
     },
   },
 });
@@ -23,14 +29,21 @@ export const newReports: Resource = post(
     validators,
   },
   async (req: Request, res: Response) => {
-    const { userId: patient } = matchedData<{ userId: mongoose.Types.ObjectId }>(req);
+    const { userId } = matchedData<{ userId: mongoose.Types.ObjectId | "@me" }>(req);
+
+    let patient: mongoose.Types.ObjectId;
+    if (userId === "@me") {
+      patient = req.userContext.sub;
+    } else {
+      patient = userId;
+    }
 
     req.body.forEach((element: ILabReport) => {
       element["patient"] = patient;
 
       if (!hasPermission(req.userContext, "labReports", "create", element)) throw new HTTP403Error();
 
-      LapReport.create({ ...element });
+      LabReport.create({ ...element });
     });
 
     res.empty();

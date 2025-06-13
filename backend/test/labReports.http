@@ -24,7 +24,7 @@ Host: {{host}}
 
 ### getLabReports
 
-GET /users/684c65ee3413251cb28bdfd1/reports HTTP/1.1
+GET /users/@me/reports
 Accept: application/json
 Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
 Content-Type: application/json
@@ -32,7 +32,7 @@ Host: {{host}}
 
 ### newLabReports
 
-POST /users/684c65ee3413251cb28bdfd1/reports HTTP/1.1
+POST /users/@me/reports HTTP/1.1
 Accept: application/json
 Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
 Content-Type: application/json
@@ -40,8 +40,8 @@ Host: {{host}}
 
 [
   {
-    "testName": "Blood Sugar",
-    "result": "112",
-    "date": "2081-03-30"
+    "testName": "Vitamin K",
+    "result": "100",
+    "date": "2081-04-12"
   }
 ]
