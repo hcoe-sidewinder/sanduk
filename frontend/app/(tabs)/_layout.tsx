@@ -4,10 +4,10 @@ import { Ionicons } from "@expo/vector-icons";
 export default function TabsLayout() {
   return (
     <Tabs
-      initialRouteName="index" // opens this tab first
+      initialRouteName="index" 
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
-          let iconName = "ellipse"; // default icon
+          let iconName = "ellipse"; 
 
           switch (route.name) {
             case "scan":
