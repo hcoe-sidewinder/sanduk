@@ -17,6 +17,6 @@ export const registerResources = (router: Router) => {
       validationGate,
       resource.handler,
     ];
-    router[resource.method](resource.path, asyncHandlers(handlers));
+    router[resource.method]("/api" + resource.path, asyncHandlers(handlers));
   });
 };
