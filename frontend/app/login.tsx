@@ -1,6 +1,7 @@
 import InputField from "@/components/InputField";
 import { Link } from "expo-router";
 import React, { useState } from "react";
+
 import {
   View,
   Text,
@@ -22,7 +23,7 @@ export default function LoginScreen() {
       Alert.alert("Error", "Please fill in both Document ID and Password");
       return;
     }
-
+    
     setIsLoading(true);
 
     setTimeout(() => {
@@ -38,6 +39,7 @@ export default function LoginScreen() {
   const handlePasswordChange = (text: string) => {
     setPassword(text);
   };
+
 
   return (
     <SafeAreaView className="flex-1 bg-blue-50">

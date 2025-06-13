@@ -1,5 +1,5 @@
 import InputField from "@/components/InputField";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
@@ -16,6 +16,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
+import { api, handleApiError } from "@/api/axiosConfig";
+import { Message } from "../../backend/common/messages";
+import { AxiosError } from "axios";
 
 const { width } = Dimensions.get("window");
 
@@ -122,6 +125,7 @@ export default function SignupScreen() {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [sex, setSex] = useState<string>("");
   const [bloodType, setBloodType] = useState<string>("");
+  const [exists, setExists] = useState(false);
 
   const handleDocumentIdValidation = async () => {
     if (!documentId.trim()) {
@@ -131,16 +135,29 @@ export default function SignupScreen() {
 
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      // setCurrentStep(2);
+    try {
+      const response = await api.post("/users", { nidNo: documentId });
+      console.log(response.data);
+    } catch (error) {
+      const message = handleApiError(error as Error);
+      console.log(message.message);
+      if (message.message === "NID_ALREADY_EXISTS") {
+        setExists(true);
+        setIsLoading(false);
+        router.replace("/login");
+      } else {
+        setIsLoading(false);
+        Animated.timing(slideAnim, {
+          toValue: -width,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+      }
 
-      Animated.timing(slideAnim, {
-        toValue: -width,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }, 2000);
+      setIsLoading(false);
+    }
+
+    setIsLoading(false);
   };
 
   const handleSignup = () => {

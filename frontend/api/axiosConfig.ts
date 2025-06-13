@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
+import Constants from "expo-constants";
 
-const BASE_API_URL = process.env.BACKEND_API;
+const BASE_API_URL = Constants.expoConfig?.extra?.EXPO_BASE_URL;
 if (!BASE_API_URL) {
   throw new Error("BASE_URL is not defined");
 }
