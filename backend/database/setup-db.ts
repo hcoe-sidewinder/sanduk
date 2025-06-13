@@ -10,7 +10,11 @@ export async function setupDB() {
   const dbOptions = `retryWrites=true&w=majority&appName=${dbName}`;
 
   try {
-    await mongoose.connect(`mongodb+srv://${dbUserName}:${dbPassword}@${dbHost}/?${dbOptions}`);
+    if (dbHost.startsWith("localhost")) {
+      await mongoose.connect(`mongodb://${dbUserName}:${dbPassword}@${dbHost}/?${dbOptions}`);
+    } else {
+      await mongoose.connect(`mongodb+srv://${dbUserName}:${dbPassword}@${dbHost}/?${dbOptions}`);
+    }
 
     Logger.info("DB Connection Established...");
   } catch (error) {

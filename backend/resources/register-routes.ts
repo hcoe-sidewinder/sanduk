@@ -2,9 +2,12 @@ import { Handler, Router } from "express";
 import { Resource } from "./lib/resources";
 import { validationGate } from "./lib/validation-gate";
 import { asyncHandlers } from "./lib/handler";
+import { newUser } from "./users/new-user";
+import { getUsers } from "./users/get-users";
+import { newUserSession } from "./users/new-session";
 
 export const resources: Record<string, Record<string, Resource>> = {
-  test: {},
+  users: { newUser, getUsers, newUserSession },
 };
 
 export const registerResources = (router: Router) => {
@@ -17,6 +20,6 @@ export const registerResources = (router: Router) => {
       validationGate,
       resource.handler,
     ];
-    router[resource.method](resource.path, asyncHandlers(handlers));
+    router[resource.method]("/api" + resource.path, asyncHandlers(handlers));
   });
 };
