@@ -6,6 +6,7 @@ import { Message } from "../../common/messages";
 import { ALL_BLOOD_TYPE, ALL_RELATION_TO_FAMILY_ADMIN, ALL_ROLE, ALL_SEX } from "../../models/types/user";
 import { hashPassword } from "../../middlewares/authentication";
 import { isNidNoUnique } from "../lib/custom-validators";
+import { HTTP400Error } from "../../common/errors";
 
 const validators: Validators = checkSchema({
   nidNo: {
@@ -123,6 +124,9 @@ export const newUser: Resource = post(
   },
   async (req: Request, res: Response) => {
     const data: IUser = matchedData<IUser>(req);
+
+    if (data.role == "MEMBER" && (!data.familyAdmin || !data.relationToFamilyAdmin))
+      throw new HTTP400Error(Message.FAMILY_ADMIN_INFO_REQUIRED);
 
     const user = await User.create({ ...data, password: hashPassword(data.password) });
 
