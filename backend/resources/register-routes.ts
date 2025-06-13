@@ -5,6 +5,7 @@ import { asyncHandlers } from "./lib/handler";
 import { newUser } from "./users/new-user";
 import { getUsers } from "./users/get-users";
 import { newUserSession } from "./users/new-session";
+import { validateToken, verifyToken } from "../middlewares/authentication/middleware";
 
 export const resources: Record<string, Record<string, Resource>> = {
   users: { newUser, getUsers, newUserSession },
@@ -15,7 +16,7 @@ export const registerResources = (router: Router) => {
 
   allResources.forEach((resource) => {
     const handlers: Handler[] = [
-      // ...(resource.auth ? [...validateToken, verifyToken] : []),
+      ...(resource.auth ? [...validateToken, verifyToken] : []),
       ...(resource.validators ?? []),
       validationGate,
       resource.handler,
