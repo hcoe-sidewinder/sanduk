@@ -5,8 +5,6 @@ export interface ILabReport extends Document {
   testName: string;
   result: string;
   date: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 const labReportSchema = new mongoose.Schema(

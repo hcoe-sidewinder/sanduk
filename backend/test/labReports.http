@@ -1,0 +1,47 @@
+@host = http://{{hostname}}:{{port}}/api
+@hostname = localhost
+@port = 5173
+
+
+### getUsers
+
+GET /users HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+### newSession
+
+POST /users/sessions HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "nidNo": "aslkdjasdasd",
+  "password": "password"
+}
+
+### getLabReports
+
+GET /users/684c65ee3413251cb28bdfd1/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+### newLabReports
+
+POST /users/684c65ee3413251cb28bdfd1/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+[
+  {
+    "testName": "Blood Sugar",
+    "result": "112",
+    "date": "2081-03-30"
+  }
+]
