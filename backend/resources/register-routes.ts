@@ -10,11 +10,14 @@ import { newReports } from "./users/userId/new-report";
 import { getReports } from "./users/userId/get-reports";
 import { newVaccine } from "./users/userId/new-vaccine";
 import { getVaccines } from "./users/userId/get-vaccines";
+import { newHereditaries } from "./users/userId/new-hereditary";
+import { getHereditaries } from "./users/userId/get-hereditary";
 
 export const resources: Record<string, Record<string, Resource>> = {
   users: { newUser, getUsers, newUserSession },
   labReports: { newReports, getReports },
   vaccines: { newVaccine, getVaccines },
+  hereditarues: { newHereditaries, getHereditaries },
 };
 
 export const registerResources = (router: Router) => {

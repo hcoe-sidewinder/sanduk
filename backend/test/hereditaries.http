@@ -1,0 +1,68 @@
+@host = http://{{hostname}}:{{port}}/api
+@hostname = localhost
+@port = 5173
+
+
+### getUsers
+
+GET /users HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+### newSession
+
+POST /users/sessions HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "nidNo": "aslkdjasdasd",
+  "password": "password"
+}
+
+### getAllHereditaries
+
+GET /users/@me/hereditaries HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+### getHereditaries
+
+GET /users/@me/hereditaries?type=ALZHEIMER HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+### newHereditaries
+
+POST /users/@me/hereditaries HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "hereditaries": [
+    {
+      "type": "ALZHEIMER",
+      "onSetAge": 12
+    },
+    {
+      "type": "RHEUMATOID_ARTHRITIS",
+      "onSetAge": 13
+    },
+    {
+      "type": "COPD",
+      "onSetAge": 14
+    },
+    {
+      "type": "COLON_CANCER",
+      "onSetAge": 20
+    }
+  ]
+}
