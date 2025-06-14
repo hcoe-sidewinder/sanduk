@@ -20,9 +20,10 @@ import { newSurgeries } from "./users/userId/new-surgery";
 import { shareProfile } from "./users/userId/share";
 import { newFCMToken } from "./users/userId/new-fcm-token";
 import { getFCMTokens } from "./users/userId/get-fcm-token";
+import { newAllergies } from "./users/userId/new-allergies";
 
 export const resources: Record<string, Record<string, Resource>> = {
-  users: { newUser, getUsers, newUserSession, getUser, shareProfile, newFCMToken, getFCMTokens },
+  users: { newUser, getUsers, newUserSession, getUser, shareProfile, newFCMToken, getFCMTokens, newAllergies },
   labReports: { newReports, getReports },
   vaccines: { newVaccine, getVaccines },
   hereditarues: { newHereditaries, getHereditaries },
