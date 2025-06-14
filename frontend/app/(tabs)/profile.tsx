@@ -38,6 +38,7 @@ const Profile = () => {
     relation: "Son",
     dob: "2002-05-18",
     sex: "Male",
+    isAdmin: true,
     bloodGroup: "A+",
     allergies: ["Peanuts", "Dust"],
     profileImage: "https://placekitten.com/200/200",
@@ -56,6 +57,7 @@ const Profile = () => {
 
         <View style={styles.headerText}>
           <Text style={styles.userName}>{user.name}</Text>
+          {user.isAdmin && <Text style={styles.adminBadge}>Family Admin</Text>}
           <Text style={styles.relation}>{user.relation}</Text>
         </View>
 
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginLeft: 5,
-    marginTop: 18,
+    marginTop: 22,
     flex: 1,
   },
   userName: {
@@ -187,9 +189,18 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: COLORS.secondary,
   },
+  adminBadge: {
+    marginTop: 1,
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#d46504",
+    // backgroundColor: COLORS.secondary,
+    paddingVertical: 2,
+    alignSelf: "flex-start",
+  },
   relation: {
     color: COLORS.accent,
-    marginTop: 4,
+    marginTop: 1,
   },
   editBtn: {
     backgroundColor: COLORS.secondary,

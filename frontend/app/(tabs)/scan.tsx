@@ -28,11 +28,18 @@ const Scan = () => {
   const [parsedText, setParsedText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (permission && !permission.granted && permission.canAskAgain) {
-      requestPermission();
-    }
-  }, [permission]);
+//   useEffect(() => {
+//     if (permission && !permission.granted && permission.canAskAgain) {
+//       requestPermission();
+//     }
+//   }, [permission]);
+
+useEffect(() => {
+  if (permission?.status !== "granted") {
+    requestPermission();
+  }
+}, [permission]);
+  
 
   const takePicture = async () => {
     if (cameraRef.current) {
