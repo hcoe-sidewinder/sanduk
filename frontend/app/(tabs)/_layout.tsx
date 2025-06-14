@@ -35,9 +35,15 @@ export default function TabsLayout() {
     >
       <Tabs.Screen name="scan" options={{ title: "Scan" }} />
       <Tabs.Screen name="prediction" options={{ title: "Prediction" }} />
-      <Tabs.Screen name="index" options={{ title: "Dashboard" }} />
+      <Tabs.Screen name="home" options={{ title: "Dashboard" }} />
       <Tabs.Screen name="report" options={{ title: "Report" }} />
       <Tabs.Screen name="profile" options={{ title: "Profile" }} />
+      <Tabs.Screen
+        name="index"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
