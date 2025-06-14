@@ -17,9 +17,12 @@ import { getMembers } from "./admins/get-members";
 import { getDoctors } from "./doctors/getDoctors";
 import { getSurgeries } from "./users/userId/get-surgeries";
 import { newSurgeries } from "./users/userId/new-surgery";
+import { shareProfile } from "./users/userId/share";
+import { newFCMToken } from "./users/userId/new-fcm-token";
+import { getFCMTokens } from "./users/userId/get-fcm-token";
 
 export const resources: Record<string, Record<string, Resource>> = {
-  users: { newUser, getUsers, newUserSession, getUser },
+  users: { newUser, getUsers, newUserSession, getUser, shareProfile, newFCMToken, getFCMTokens },
   labReports: { newReports, getReports },
   vaccines: { newVaccine, getVaccines },
   hereditarues: { newHereditaries, getHereditaries },
