@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, Text, StyleSheet, TouchableOpacity } from "react-native";
+import type React from "react";
+import { ScrollView, Text, StyleSheet } from "react-native";
 import DataTimeline from "@/components/DataTimeline";
 import mockTimelineData from "@/constants/MockTimelineData";
 import { familyTreeData } from "@/constants/MockFamilyTreeData";
@@ -7,6 +7,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FamilyTree from "@/components/HereditaryTree";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import AnimatedBackground from "@/components/AnimatedBackground";
+import { useEffect, useState } from "react";
 
 const clearAsyncStorage = async () => {
   try {
@@ -45,26 +47,26 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
-    <>
+    <AnimatedBackground>
       <ScrollView style={styles.container}>
-        <TouchableOpacity onPress={handleClear} className="bg-red-600">
-          <Text>Clear storage</Text>
-        </TouchableOpacity>
-        <Text style={styles.header}>Family Health Timeline</Text>
-        {mockTimelineData.map((member) => (
-          <DataTimeline key={member.memberId} member={member} />
-        ))}
+        <SafeAreaView style={styles.container}>
+          <FamilyTree data={familyTreeData} />
+        </SafeAreaView>
+
+        <ScrollView style={styles.container}>
+          <Text style={styles.header}>Family Health Timeline</Text>
+          {mockTimelineData.map((member) => (
+            <DataTimeline key={member.memberId} member={member} />
+          ))}
+        </ScrollView>
       </ScrollView>
-      <SafeAreaView style={styles.container}>
-        <FamilyTree data={familyTreeData} />
-      </SafeAreaView>
-    </>
+    </AnimatedBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { marginTop: 50, paddingHorizontal: 20 },
-  header: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  container: { marginTop: 10, paddingHorizontal: 10 },
+  header: { fontSize: 24, fontWeight: "bold", marginBottom: 10 },
 });
 
 export default HomeScreen;
