@@ -4,8 +4,6 @@ export interface IVaccine extends Document {
   patient: mongoose.Types.ObjectId;
   name: string;
   date: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 const vaccineSchema = new mongoose.Schema(
