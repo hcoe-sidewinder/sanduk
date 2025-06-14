@@ -137,6 +137,7 @@ export default function SignupScreen() {
     setIsLoading(true);
 
     try {
+      console.log("trying");
       const response = await api.post("/users", { nidNo: documentId });
     } catch (error) {
       const message = handleApiError(error as Error);

@@ -16,7 +16,7 @@ export default function Index() {
 
   useEffect(() => {
     if (isReady) {
-      router.replace("/home");
+      router.replace("/report");
     }
   }, [isReady]);
 
