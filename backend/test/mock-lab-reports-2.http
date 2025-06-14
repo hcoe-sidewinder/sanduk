@@ -1,0 +1,677 @@
+@host = http://{{hostname}}:{{port}}/api
+@hostname = localhost
+@port = 5173
+
+
+### getUsers
+
+GET /users HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+### newSession
+
+POST /users/sessions HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "nidNo": "ggjkmh",
+  "password": "password"
+}
+
+### getAllLabReports
+
+GET /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+### getLabReports
+
+GET /users/@me/reports?testName=pH HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-01-05",
+  "date": "2025-01-05",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "95",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "130",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "185",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.5",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.8",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-01-20",
+  "date": "2025-01-20",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "100",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "145",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "190",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.8",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.1",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-02-05",
+  "date": "2025-02-05",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "90",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "125",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "175",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.2",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.5",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-02-20",
+  "date": "2025-02-20",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "110",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "155",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "205",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "6.0",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.5",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-03-05",
+  "date": "2025-03-05",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "98",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "135",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "188",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.6",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.9",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-03-20",
+  "date": "2025-03-20",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "105",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "140",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "195",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "6.2",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.3",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-04-05",
+  "date": "2025-04-05",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "92",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "128",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "180",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.3",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.7",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-04-20",
+  "date": "2025-04-20",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "112",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "160",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "210",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "6.5",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.8",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-05-05",
+  "date": "2025-05-05",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "97",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "132",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "187",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.4",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.6",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-05-20",
+  "date": "2025-05-20",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "108",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "148",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "200",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "6.1",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.2",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-06-05",
+  "date": "2025-06-05",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "93",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "127",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "178",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.0",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.4",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Glucose, Cholesterol, Uric Acid, Thyroid Data (Medium Variation)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-06-15",
+  "date": "2025-06-15",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "102",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "142",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "192",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.9",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.0",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}

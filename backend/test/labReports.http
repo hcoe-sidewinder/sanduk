@@ -32,7 +32,7 @@ Host: {{host}}
 
 ### getLabReports
 
-GET /users/@me/reports?testName=Glucose%20F HTTP/1.1
+GET /users/@me/reports?testName=Total%20Cholesterol HTTP/1.1
 Accept: application/json
 Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
 Content-Type: application/json
