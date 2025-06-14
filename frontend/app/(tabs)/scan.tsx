@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReportDisplay from "@/components/ReportDisplay";
 import { reportData } from "@/constants/reportData";
+import { useFocusEffect } from "@react-navigation/native";
+
 
 import {
   View,
@@ -27,6 +29,7 @@ const Scan = () => {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [parsedText, setParsedText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isCameraActive, setIsCameraActive] = useState(false);
 
 //   useEffect(() => {
 //     if (permission && !permission.granted && permission.canAskAgain) {
@@ -40,6 +43,21 @@ useEffect(() => {
   }
 }, [permission]);
   
+
+useFocusEffect(
+  useCallback(() => {
+    setIsCameraActive(true);
+
+    return () => {
+      setIsCameraActive(false);
+    };
+  }, [])
+);
+useEffect(() => {
+  return () => {
+    setIsCameraActive(false);
+  };
+}, []);
 
   const takePicture = async () => {
     if (cameraRef.current) {
@@ -140,6 +158,7 @@ useEffect(() => {
     setParsedText(null);
     setReportDisplay(null);
     setLoading(false);
+    setIsCameraActive(true); 
   };
 
   if (!permission) {
@@ -189,7 +208,9 @@ useEffect(() => {
         </View>
       ) : (
         <>
-          <CameraView style={styles.camera} facing={facing} ref={cameraRef} />
+          {isCameraActive && (
+            <CameraView style={styles.camera} facing={facing} ref={cameraRef} />
+          )}
           <View style={styles.cameraControls}>
             <TouchableOpacity
               onPress={pickFromGallery}
