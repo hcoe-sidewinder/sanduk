@@ -42,10 +42,11 @@ export default function LoginScreen() {
       });
       const data = response.data;
       await storeData("auth", data.data);
-      console.log(data.userId);
+      setIsLoading(false);
       router.replace("/home");
     } catch (error) {
       const message = handleApiError(error as Error);
+      setIsLoading(false);
       Alert.alert(message.message);
     }
   };
