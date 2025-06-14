@@ -127,7 +127,6 @@ export default function SignupScreen() {
   const [sex, setSex] = useState<string>("");
   const [bloodType, setBloodType] = useState<string>("");
   const [doctor, setDoctor] = useState<string>("");
-  const [exists, setExists] = useState(false);
 
   const handleDocumentIdValidation = async () => {
     if (!documentId.trim()) {
@@ -144,7 +143,6 @@ export default function SignupScreen() {
       const message = handleApiError(error as Error);
       console.log("message is message", message.message);
       if (message.message === "NID_ALREADY_EXISTS") {
-        setExists(true);
         setIsLoading(false);
         Alert.alert("User Already Exists");
         router.replace("/login");

@@ -1,5 +1,6 @@
+import { api, handleApiError } from "@/api/axiosConfig";
 import InputField from "@/components/InputField";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
 
 import {
@@ -12,24 +13,41 @@ import {
   Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const storeData = async (key: string, value: any) => {
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.error("Error storing data:", error);
+  }
+};
 
 export default function LoginScreen() {
   const [documentId, setDocumentId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!documentId.trim() || !password.trim()) {
       Alert.alert("Error", "Please fill in both Document ID and Password");
       return;
     }
-    
-    setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      Alert.alert("Success", "Login successful!");
-    }, 2000);
+    setIsLoading(true);
+    try {
+      const response = await api.post("/users/sessions", {
+        nidNo: documentId,
+        password: password,
+      });
+      const data = response.data;
+      await storeData("auth", data.data);
+      console.log(data.userId);
+      router.replace("/home");
+    } catch (error) {
+      const message = handleApiError(error as Error);
+      Alert.alert(message.message);
+    }
   };
 
   const handleDocumentIdChange = (text: string) => {
@@ -39,7 +57,6 @@ export default function LoginScreen() {
   const handlePasswordChange = (text: string) => {
     setPassword(text);
   };
-
 
   return (
     <SafeAreaView className="flex-1 bg-blue-50">

@@ -47,14 +47,14 @@ export default function Index() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsReady(true);
-    }, 100); // small delay ensures layout mounts
+    }, 1);
 
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     if (isReady) {
-      router.replace("/login");
+      router.replace("/home");
     }
   }, [isReady]);
 
