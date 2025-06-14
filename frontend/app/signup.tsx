@@ -22,8 +22,9 @@ import { AxiosError } from "axios";
 
 const { width } = Dimensions.get("window");
 
-const SEX_OPTIONS = ["Male", "Female", "Other"];
+const SEX_OPTIONS = ["MALE", "FEMALE", "OTHER"];
 const BLOOD_TYPE_OPTIONS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+const Doctor_CHECK = ["Yes", "No"];
 
 interface DropdownProps {
   label: string;
@@ -125,6 +126,7 @@ export default function SignupScreen() {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [sex, setSex] = useState<string>("");
   const [bloodType, setBloodType] = useState<string>("");
+  const [doctor, setDoctor] = useState<string>("");
   const [exists, setExists] = useState(false);
 
   const handleDocumentIdValidation = async () => {
@@ -140,10 +142,11 @@ export default function SignupScreen() {
       console.log(response.data);
     } catch (error) {
       const message = handleApiError(error as Error);
-      console.log(message.message);
+      console.log("message is message", message.message);
       if (message.message === "NID_ALREADY_EXISTS") {
         setExists(true);
         setIsLoading(false);
+        Alert.alert("User Already Exists");
         router.replace("/login");
       } else {
         setIsLoading(false);
@@ -160,7 +163,7 @@ export default function SignupScreen() {
     setIsLoading(false);
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (
       !fullName.trim() ||
       !address.trim() ||
@@ -185,12 +188,43 @@ export default function SignupScreen() {
     }
 
     setIsLoading(true);
-
-    setTimeout(() => {
+    console.log({
+      nidNo: documentId,
+      nidImg: documentPhoto,
+      password: password,
+      dob: dateOfBirth,
+      sex: sex,
+      name: fullName,
+      bloodtype: bloodType,
+      isDoctor: doctor ? true : false,
+    });
+    const data = {
+      nidNo: documentId,
+      nidImg: documentPhoto,
+      password: password,
+      dob: dateOfBirth,
+      sex: sex,
+      name: fullName,
+      bloodtype: bloodType,
+      isDoctor: doctor ? true : false,
+    };
+    try {
+      const response = await api.post("/users", data);
+      console.log(response.data);
       setIsLoading(false);
-      Alert.alert("Success", "Account created successfully!");
-    }, 2000);
+      router.replace("/login");
+    } catch (error) {
+      const message = handleApiError(error as Error);
+      console.log("message is message", message.message);
+      Alert.alert(message.message);
+      setIsLoading(false);
+    }
   };
+
+  // setTimeout(() => {
+  //   setIsLoading(false);
+  //   Alert.alert("Success", "Account created successfully!");
+  // }, 2000);
 
   const pickImage = async (type: "photo" | "document") => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -366,7 +400,7 @@ export default function SignupScreen() {
                       </TouchableOpacity>
                     </View>
 
-                    <View className="mt-4">
+                    <View className="mt-4 mb-4">
                       <Text className="text-gray-700 font-medium mb-2">
                         Document Photo <Text className="text-red-500">*</Text>
                       </Text>
@@ -393,6 +427,14 @@ export default function SignupScreen() {
                         )}
                       </TouchableOpacity>
                     </View>
+
+                    <Dropdown
+                      label="Are you a Doctor?"
+                      value={doctor}
+                      options={Doctor_CHECK}
+                      onSelect={setDoctor}
+                      placeholder="Are you a Doctor?"
+                    />
 
                     <InputField
                       label="Password"
