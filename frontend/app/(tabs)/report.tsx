@@ -2,11 +2,12 @@ import { useState } from "react";
 import {
   View,
   Text,
-  FlatList,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { TextInput } from "react-native";
+
 
 const mockReports: ILabReport[] = [
   {
@@ -71,6 +72,8 @@ interface ILabReport {
 }
 const Report = () => {
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   const toggleExpand = (id: string) => {
     setExpandedIds((prev) =>
@@ -81,57 +84,72 @@ const Report = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Medical Reports</Text>
-      {mockReports.map((report) => {
-        const isExpanded = expandedIds.includes(report._id);
-
-        return (
-          <View key={report._id} style={styles.card}>
-            <TouchableOpacity onPress={() => toggleExpand(report._id)}>
-              <View style={styles.cardHeader}>
-                <View>
-                  <Text style={styles.reportTitle}>{report.testTitle}</Text>
-                  <Text style={styles.dateText}>
-                    {new Date(report.date).toLocaleDateString()}
-                  </Text>
-                </View>
-                <Text style={styles.arrow}>{isExpanded ? "▼" : "▶"}</Text>
-              </View>
-            </TouchableOpacity>
-
-            {isExpanded && (
-              <View style={styles.table}>
-                <Text style={styles.sampleNo}>
-                  Sample No: {report.sampleNo}
-                </Text>
-
-                <View style={[styles.row, styles.headerRow]}>
-                  <Text style={styles.headerCell}>Test Name</Text>
-                  <Text style={styles.headerCell}>Result</Text>
-                  <Text style={styles.headerCell}>Unit</Text>
-                  <Text style={styles.headerCell}>Ref. Range</Text>
-                  <Text style={styles.headerCell}>Method</Text>
-                  <Text style={styles.headerCell}>Conv. Factor</Text>
-                </View>
-
-                {report.tests.map((test, i) => (
-                  <View key={i} style={styles.row}>
-                    <Text style={styles.cell}>{test.testName}</Text>
-                    <Text style={styles.cell}>{test.result}</Text>
-                    <Text style={styles.cell}>{test.unit || "-"}</Text>
-                    <Text style={styles.cell}>
-                      {test.referenceRange || "-"}
-                    </Text>
-                    <Text style={styles.cell}>{test.method || "-"}</Text>
-                    <Text style={styles.cell}>
-                      {test.conversionFactor || "-"}
+      <TextInput
+        placeholder="Search by test name..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        style={styles.searchInput}
+      />
+      {mockReports
+        .filter((report) => {
+          const query = searchQuery.toLowerCase();
+          return (
+            report.testTitle.toLowerCase().includes(query) ||
+            report.tests.some((test) =>
+              test.testName.toLowerCase().includes(query)
+            )
+          );
+        })
+        .map((report) => {
+          const isExpanded = expandedIds.includes(report._id);
+          return (
+            <View key={report._id} style={styles.card}>
+              <TouchableOpacity onPress={() => toggleExpand(report._id)}>
+                <View style={styles.cardHeader}>
+                  <View>
+                    <Text style={styles.reportTitle}>{report.testTitle}</Text>
+                    <Text style={styles.dateText}>
+                      {new Date(report.date).toLocaleDateString()}
                     </Text>
                   </View>
-                ))}
-              </View>
-            )}
-          </View>
-        );
-      })}
+                  <Text style={styles.arrow}>{isExpanded ? "▼" : "▶"}</Text>
+                </View>
+              </TouchableOpacity>
+
+              {isExpanded && (
+                <View style={styles.table}>
+                  <Text style={styles.sampleNo}>
+                    Sample No: {report.sampleNo}
+                  </Text>
+
+                  <View style={[styles.row, styles.headerRow]}>
+                    <Text style={styles.headerCell}>Test Name</Text>
+                    <Text style={styles.headerCell}>Result</Text>
+                    <Text style={styles.headerCell}>Unit</Text>
+                    <Text style={styles.headerCell}>Ref. Range</Text>
+                    <Text style={styles.headerCell}>Method</Text>
+                    <Text style={styles.headerCell}>Conv. Factor</Text>
+                  </View>
+
+                  {report.tests.map((test, i) => (
+                    <View key={i} style={styles.row}>
+                      <Text style={styles.cell}>{test.testName}</Text>
+                      <Text style={styles.cell}>{test.result}</Text>
+                      <Text style={styles.cell}>{test.unit || "-"}</Text>
+                      <Text style={styles.cell}>
+                        {test.referenceRange || "-"}
+                      </Text>
+                      <Text style={styles.cell}>{test.method || "-"}</Text>
+                      <Text style={styles.cell}>
+                        {test.conversionFactor || "-"}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </View>
+          );
+        })}
     </ScrollView>
   );
 }
@@ -199,6 +217,16 @@ const styles = StyleSheet.create({
   cell: {
     flex: 1,
     fontSize: 12,
+  },
+  searchInput: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 10,
+    fontSize: 14,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#ccc",
   },
 });
 
