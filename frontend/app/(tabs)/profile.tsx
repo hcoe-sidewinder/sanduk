@@ -9,9 +9,12 @@ import {
   Modal,
   Animated,
   Dimensions,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
+import { getData } from "./home";
+import { api, handleApiError } from "@/api/axiosConfig";
 
 const { height: screenHeight } = Dimensions.get("window");
 
@@ -45,6 +48,11 @@ const formatDate = (dateString: string): string => {
   });
 };
 
+interface Vaccination {
+  name: string;
+  date: string;
+}
+
 const Profile = () => {
   const router = useRouter();
   const [surgicalModalVisible, setSurgicalModalVisible] = useState(false);
@@ -65,41 +73,44 @@ const Profile = () => {
     hereditaryRisks: ["Diabetes", "Hypertension"],
   };
 
-  // Sample data for surgical history
-  const surgicalHistory = [
-    {
-      name: "Heart Surgery",
-      date: "2025-06-05T00:00:00.000+00:00",
-    },
-    {
-      name: "Appendectomy",
-      date: "2021-07-20T00:00:00.000+00:00",
-    },
-    {
-      name: "Knee Replacement",
-      date: "2020-03-15T00:00:00.000+00:00",
-    },
-  ];
+  // // Sample data for surgical history
+  // const surgicalHistory = [
+  //   {
+  //     name: "Heart Surgery",
+  //     date: "2025-06-05T00:00:00.000+00:00",
+  //   },
+  //   {
+  //     name: "Appendectomy",
+  //     date: "2021-07-20T00:00:00.000+00:00",
+  //   },
+  //   {
+  //     name: "Knee Replacement",
+  //     date: "2020-03-15T00:00:00.000+00:00",
+  //   },
+  // ];
+  const [vaccinationHistory, setVaccinationHistory] = useState<Vaccination[]>(
+    []
+  );
+  const [surgicalHistory, setSurgicalHistory] = useState<Vaccination[]>([]);
 
-  // Sample data for vaccination history
-  const vaccinationHistory = [
-    {
-      name: "COVID-19 Vaccine",
-      date: "2024-11-15T00:00:00.000+00:00",
-    },
-    {
-      name: "Flu Shot",
-      date: "2024-09-20T00:00:00.000+00:00",
-    },
-    {
-      name: "Hepatitis B",
-      date: "2023-05-10T00:00:00.000+00:00",
-    },
-    {
-      name: "Tetanus",
-      date: "2022-08-12T00:00:00.000+00:00",
-    },
-  ];
+  // const vaccinationHistory = [
+  //   {
+  //     name: "COVID-19 Vaccine",
+  //     date: "2024-11-15T00:00:00.000+00:00",
+  //   },
+  //   {
+  //     name: "Flu Shot",
+  //     date: "2024-09-20T00:00:00.000+00:00",
+  //   },
+  //   {
+  //     name: "Hepatitis B",
+  //     date: "2023-05-10T00:00:00.000+00:00",
+  //   },
+  //   {
+  //     name: "Tetanus",
+  //     date: "2022-08-12T00:00:00.000+00:00",
+  //   },
+  // ];
 
   const age = calculateAge(user.dob);
 
@@ -114,7 +125,6 @@ const Profile = () => {
       setVaccinationModalVisible(true);
     }
 
-    // Animate slide up
     Animated.timing(slideAnim, {
       toValue: 0,
       duration: 300,
@@ -123,7 +133,6 @@ const Profile = () => {
   };
 
   const closeModal = () => {
-    // Animate slide down
     Animated.timing(slideAnim, {
       toValue: screenHeight,
       duration: 300,
@@ -204,6 +213,42 @@ const Profile = () => {
     </Modal>
   );
 
+  const vaccinationHandler = async () => {
+    const data = await getData("auth");
+    try {
+      const response = await api.get(`/users/${data._id}/vaccines`, {
+        headers: {
+          Authorization: `Bearer ${data.accessToken}`,
+        },
+      });
+      setVaccinationHistory(response.data.data);
+      openModal("vaccination");
+    } catch (error) {
+      console.log(error);
+      const msg = handleApiError(error as Error);
+      console.log(msg.message);
+      Alert.alert(msg.message);
+    }
+  };
+
+  const surgicalHandler = async () => {
+    const data = await getData("auth");
+    try {
+      const response = await api.get(`/users/${data._id}/surgeries`, {
+        headers: {
+          Authorization: `Bearer ${data.accessToken}`,
+        },
+      });
+      setSurgicalHistory(response.data.data);
+      openModal("surgical");
+    } catch (error) {
+      console.log(error);
+      const msg = handleApiError(error as Error);
+      console.log(msg.message);
+      Alert.alert(msg.message);
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.coverBg} />
@@ -255,14 +300,14 @@ const Profile = () => {
       <View style={styles.buttonGroup}>
         <TouchableOpacity
           style={[styles.button, styles.primaryButton]}
-          onPress={() => openModal("surgical")}
+          onPress={surgicalHandler}
         >
           <Text style={styles.primaryButtonText}>Surgical History</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.button, styles.secondaryButton]}
-          onPress={() => openModal("vaccination")}
+          onPress={vaccinationHandler}
         >
           <Text style={styles.secondaryButtonText}>Vaccination History</Text>
         </TouchableOpacity>
