@@ -170,7 +170,6 @@ const HomeScreen: React.FC = () => {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* User Profile */}
             <TouchableOpacity
               onPress={handleProfilePress}
               style={styles.profileContainer}
@@ -284,7 +283,6 @@ const HomeScreen: React.FC = () => {
             </View>
           </Animated.View>
 
-          {/* Quick Stats Section */}
           <Animated.View
             style={[
               styles.statsSection,
