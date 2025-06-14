@@ -33,14 +33,13 @@ const HomeScreen: React.FC = () => {
   useEffect(() => {
     const getAuth = async () => {
       const data = await getData("auth");
-      console.log(data);
       if (!data) {
         router.replace("/login");
       }
       setAuth(data);
     };
     getAuth();
-  }, [auth]);
+  }, []);
 
   const handleClear = async () => {
     await clearAsyncStorage();
