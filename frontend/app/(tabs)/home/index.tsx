@@ -45,14 +45,17 @@ const HomeScreen: React.FC = () => {
     await clearAsyncStorage();
   };
 
-  const handleAddMemberClick = ()=>{
-    router.replace("./home/")
-  }
+  const handleAddMemberClick = () => {
+    router.replace("./newMem");
+  };
 
   return (
     <AnimatedBackground>
       <ScrollView style={styles.container}>
-        <TouchableOpacity onPress={handleAddMemberClick} className="w-46 rounded-lg text-white p-2 mt-10 bg-blue-600">
+        <TouchableOpacity
+          onPress={handleAddMemberClick}
+          className="w-46 rounded-lg text-white p-2 mt-10 bg-blue-600"
+        >
           <Text>Add Members</Text>
         </TouchableOpacity>
         <SafeAreaView style={styles.container}>
