@@ -22,9 +22,17 @@ Host: {{host}}
   "password": "password"
 }
 
+### getAllLabReports
+
+GET /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
 ### getLabReports
 
-GET /users/@me/reports
+GET /users/@me/reports?testName=pH HTTP/1.1
 Accept: application/json
 Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
 Content-Type: application/json
@@ -38,10 +46,70 @@ Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
 Content-Type: application/json
 Host: {{host}}
 
-[
-  {
-    "testName": "Vitamin K",
-    "result": "100",
-    "date": "2081-04-12"
-  }
-]
+{
+  "sampleNo": "asldkjasld",
+  "date": "2025-05-14",
+  "specimen": "Urine",
+  "tests": [
+    {
+      "testName": "Colour",
+      "result": "Yellow"
+    },
+    {
+      "testName": "pH",
+      "result": "10.0",
+      "unit": "",
+      "referenceRange": "4.5 - 8.0",
+      "method": "Dipstick",
+      "conversionFactor": ""
+    },
+    {
+      "testName": "Protein",
+      "result": "Negative",
+      "unit": "",
+      "referenceRange": "Negative",
+      "method": "Dipstick",
+      "conversionFactor": ""
+    }
+  ]
+}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "asldkjasdasld",
+  "date": "2025-05-14",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "98",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Urea",
+      "result": "19",
+      "unit": "mg/dL",
+      "referenceRange": "13-43",
+      "method": "UREASE- GLDH",
+      "conversionFactor": "X 0.166 (mmol/L)"
+    },
+    {
+      "testName": "Creatinine",
+      "result": "1.3",
+      "unit": "mg/dL",
+      "referenceRange": "0.4-1.4",
+      "method": "JAFFES KINETIC",
+      "conversionFactor": "X 88.4(umol/L)"
+    }
+  ]
+}

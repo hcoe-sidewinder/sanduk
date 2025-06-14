@@ -1,9 +1,10 @@
 import type { Request, Response } from "express";
 import { get, type Resource, type Validators } from "../../lib/resources";
-import { LabReport } from "../../../models/lab-report";
+import { LabReport, type ILabReport } from "../../../models/lab-report";
 import { checkSchema, matchedData } from "express-validator";
 import { Message } from "../../../common/messages";
 import mongoose from "mongoose";
+import { Logger } from "../../../common/logger";
 
 const validators: Validators = checkSchema({
   userId: {
@@ -20,6 +21,7 @@ const validators: Validators = checkSchema({
   },
   testName: {
     in: "query",
+    trim: true,
     optional: true,
   },
 });
@@ -35,19 +37,61 @@ export const getReports: Resource = get(
 
     let patient: mongoose.Types.ObjectId;
     if (userId === "@me") {
-      patient = req.userContext.sub;
+      patient = new mongoose.Types.ObjectId(req.userContext.sub);
     } else {
-      patient = userId;
+      patient = new mongoose.Types.ObjectId(userId);
     }
-
-    const query: mongoose.FilterQuery<typeof LabReport> = { patient };
 
     if (testName) {
-      query["testName"] = testName;
+      // If testName is provided, use aggregation to get only the desired tests with date
+      const pipeline: mongoose.PipelineStage[] = [
+        {
+          $match: {
+            patient,
+          },
+        },
+        {
+          $unwind: "$tests", // Deconstruct the 'tests' array
+        },
+        {
+          $match: {
+            "tests.testName": testName, // Filter for the specific testName after unwind
+          },
+        },
+        {
+          $project: {
+            _id: 0, // Exclude the report _id
+            date: "$date", // Include the report's date field
+            // Correctly access the schema paths for the 'tests' subdocument
+            // Mongoose array subdocument schemas are accessed via the 'caster' property.
+            // We use 'as any' to bypass strict TypeScript checking for this dynamic access.
+            ...(() => {
+              const testsPath = LabReport.schema.paths["tests"] as any;
+              // Add a check to ensure testsPath, caster, and schema exist,
+              // though in a well-defined Mongoose schema, they should.
+              if (!testsPath || !testsPath.caster || !testsPath.caster.schema) {
+                Logger.error("Error: 'tests' subdocument schema not found or incorrectly defined.");
+                // Depending on your error handling strategy, you might want to throw an error
+                // or return a specific response here. For now, it will proceed with an empty object
+                // which might lead to unexpected project output if this condition is met.
+                return {};
+              }
+              const testSubSchemaPaths = testsPath.caster.schema.paths;
+              return Object.fromEntries(Object.keys(testSubSchemaPaths).map((key) => [key, `$tests.${key}`]));
+            })(),
+          },
+        },
+      ];
+
+      const filteredTests = await LabReport.aggregate(pipeline);
+
+      return res.success(filteredTests);
+    } else {
+      // If no testName, return all reports for the patient
+      const query: mongoose.FilterQuery<ILabReport> = { patient };
+      const reports = await LabReport.find(query).lean();
+
+      res.success(reports);
     }
-
-    const reports = await LabReport.find(query);
-
-    res.success(reports);
   },
 );

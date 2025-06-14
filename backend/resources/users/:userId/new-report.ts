@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { post, type Resource, type Validators } from "../../lib/resources";
 import { hasPermission } from "../../lib/access-contorl/abac";
 import { HTTP403Error } from "../../../common/errors";
-import { LabReport, type ILabReport } from "../../../models/lab-report";
+import { LabReport } from "../../../models/lab-report";
 import { checkSchema, matchedData } from "express-validator";
 import { Message } from "../../../common/messages";
 import mongoose from "mongoose";
@@ -38,13 +38,11 @@ export const newReports: Resource = post(
       patient = userId;
     }
 
-    req.body.forEach((element: ILabReport) => {
-      element["patient"] = patient;
+    req.body["patient"] = patient;
 
-      if (!hasPermission(req.userContext, "labReports", "create", element)) throw new HTTP403Error();
+    if (!hasPermission(req.userContext, "labReports", "create", req.body)) throw new HTTP403Error();
 
-      LabReport.create({ ...element });
-    });
+    LabReport.create({ ...req.body });
 
     res.empty();
   },
