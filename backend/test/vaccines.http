@@ -1,0 +1,64 @@
+@host = http://{{hostname}}:{{port}}/api
+@hostname = localhost
+@port = 5173
+
+
+### getUsers
+
+GET /users HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+### newSession
+
+POST /users/sessions HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "nidNo": "aslkdjasdasd",
+  "password": "password"
+}
+
+### getAllVaccines
+
+GET /users/@me/vaccines HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+### getVaccines
+
+GET /users/@me/vaccines?name=Covid HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+### newVacciens
+
+POST /users/@me/vaccines HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "vaccines": [
+    {
+      "name": "Covid",
+      "date": "2021-06-20"
+    },
+    {
+      "name": "Polio",
+      "date": "2021-09-20"
+    },
+    {
+      "name": "Test",
+      "date": "2021-07-20"
+    }
+  ]
+}
