@@ -175,65 +175,6 @@ const MedicalRecordsScreen = () => {
 
   const [auth, setAuth] = useState<any>();
 
-  // const postVaccinations = async (data: any) => {
-  //   console.log("passed data is", JSON.stringify(data, null, 4));
-  //   console.log("to set", vaccinations);
-  //   try {
-  //     const vaccinationResponse = await Promise.all(
-  //       vaccinations.map((vaccination: any) => {
-  //         const toSend = {
-  //           patient: data._id,
-  //           name: vaccination.name,
-  //           date: vaccination.date,
-  //         };
-  //         return api.post(`/users/${data._id}/vaccines`, toSend, {
-  //           headers: {
-  //             Authorization: `bearer ${data.accessToken}`,
-  //           },
-  //         });
-  //       })
-  //     );
-  //     console.log(vaccinations);
-  //     console.log(vaccinationResponse);
-  //   } catch (error) {
-  //     const message = handleApiError(error as Error);
-  //     throw message;
-  //   }
-  // };
-  // const postSurgery = async (data: any) => {
-  //   try {
-  //     console.log(surgeries);
-  //   } catch (error) {
-  //     const message = handleApiError(error as Error);
-  //     // Alert.alert(message.message);
-  //     throw message;
-  //   }
-  // };
-
-  // const postDisease = async (data: any) => {
-  //   try {
-  //     console.log(hereditaryDiseases);
-  //     const hereditaryResponse = await Promise.all(
-  //       hereditaryDiseases.map((disease: any) => {
-  //         const toSend = {
-  //           patient: data._id,
-  //           type: disease.type,
-  //           onSetAge: disease.onSetAge,
-  //         };
-  //         return api.post(`/users/${data._id}/vaccines`, toSend, {
-  //           headers: {
-  //             Authorization: `bearer ${data.accessToken}`,
-  //           },
-  //         });
-  //       })
-  //     );
-  //     console.log(hereditaryResponse);
-  //   } catch (error) {
-  //     const message = handleApiError(error as Error);
-  //     throw message;
-  //   }
-  // };
-
   const postVaccinations = async (data: any) => {
     console.log("passed data is", JSON.stringify(data, null, 4));
     console.log("to set", vaccinations);
@@ -278,21 +219,23 @@ const MedicalRecordsScreen = () => {
   const postSurgery = async (data: any) => {
     try {
       console.log(surgeries);
-      // const surgeryResponse = await Promise.all(
-      //   surgeries.map((surgery: any) => {
-      //     const toSend = {
-      //       patient: data._id,
-      //       name: surgery.name,
-      //       date: surgery.date,
-      //     };
-      //     return api.post(`/users/${data._id}/surgeries`, toSend, {
-      //       headers: {
-      //         Authorization: `Bearer ${data.accessToken}`,
-      //       },
-      //     });
-      //   })
-      // );
-      // console.log(surgeryResponse);
+      const sendData = surgeries.map((surgery) => {
+        return {
+          name: surgery.name,
+          date: surgery.date.toISOString().split("T")[0],
+        };
+      });
+      const surgeryResponse = await api.post(
+        `/users/${data._id}/surgeries`,
+        { surgeries: sendData },
+        {
+          headers: {
+            Authorization: `Bearer ${data.accessToken}`,
+          },
+        }
+      );
+      console.log(surgeries);
+      console.log(surgeryResponse);
     } catch (error) {
       const message = handleApiError(error as Error);
       throw message;
