@@ -1,23 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 
 export default function Dashboard() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to the Dashboard</Text>
-      {/* You can add more components here like stats, charts, buttons, etc. */}
+    <View className="flex-1 justify-center items-center p-4">
+      <Text className="text-2xl font-bold">Welcome to the Dashboard</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-});
