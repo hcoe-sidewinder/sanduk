@@ -67,3 +67,23 @@ Accept: application/json
 Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
 Content-Type: application/json
 Host: {{host}}
+
+### newFCMToken
+
+POST /users/@me/fcmTokens HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "fcmToken": "askldjhaskdhj"
+}
+
+### getFCMToken
+
+GET /users/@me/fcmTokens HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
