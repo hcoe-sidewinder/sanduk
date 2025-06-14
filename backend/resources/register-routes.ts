@@ -15,6 +15,8 @@ import { getHereditaries } from "./users/userId/get-hereditary";
 import { getUser } from "./users/userId/get-user";
 import { getMembers } from "./admins/get-members";
 import { getDoctors } from "./doctors/getDoctors";
+import { getSurgeries } from "./users/userId/get-surgeries";
+import { newSurgeries } from "./users/userId/new-surgery";
 
 export const resources: Record<string, Record<string, Resource>> = {
   users: { newUser, getUsers, newUserSession, getUser },
@@ -23,6 +25,7 @@ export const resources: Record<string, Record<string, Resource>> = {
   hereditarues: { newHereditaries, getHereditaries },
   admins: { getMembers },
   doctors: { getDoctors },
+  surgeries: { getSurgeries, newSurgeries },
 };
 
 export const registerResources = (router: Router) => {
