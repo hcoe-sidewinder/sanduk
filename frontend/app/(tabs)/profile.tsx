@@ -15,6 +15,8 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getData } from "./home";
 import { api, handleApiError } from "@/api/axiosConfig";
+import { AxiosError } from "axios";
+import { measure } from "react-native-reanimated";
 
 const { height: screenHeight } = Dimensions.get("window");
 
@@ -58,11 +60,21 @@ interface HereditaryRisk {
   onSetAge: number;
 }
 
+interface User {
+  id: string;
+  name: string;
+  relation: string;
+  profileImage: string;
+}
+
 const Profile = () => {
   const router = useRouter();
   const [surgicalModalVisible, setSurgicalModalVisible] = useState(false);
   const [vaccinationModalVisible, setVaccinationModalVisible] = useState(false);
+  const [shareModalVisible, setShareModalVisible] = useState(false);
   const [slideAnim] = useState(new Animated.Value(screenHeight));
+  const [shareSlideAnim] = useState(new Animated.Value(screenHeight));
+  const [doctors, setDoctors] = useState();
 
   const user = {
     name: "Aayush Shrestha",
@@ -116,18 +128,29 @@ const Profile = () => {
     router.push("/addInformation");
   };
 
-  const openModal = (type: "surgical" | "vaccination") => {
+  const openModal = (type: "surgical" | "vaccination" | "share") => {
     if (type === "surgical") {
       setSurgicalModalVisible(true);
-    } else {
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else if (type === "vaccination") {
       setVaccinationModalVisible(true);
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else if (type === "share") {
+      setShareModalVisible(true);
+      Animated.timing(shareSlideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
     }
-
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
   };
 
   const closeModal = () => {
@@ -139,6 +162,30 @@ const Profile = () => {
       setSurgicalModalVisible(false);
       setVaccinationModalVisible(false);
     });
+  };
+
+  const closeShareModal = () => {
+    Animated.timing(shareSlideAnim, {
+      toValue: screenHeight,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setShareModalVisible(false);
+    });
+  };
+
+  const handleShareWithUser = (userId: string, userName: string) => {
+    Alert.alert("Share Access", `Share Access with ${userName}?`, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Share",
+        onPress: () => {
+          console.log(`Sharing profile with user: ${userId}`);
+          closeShareModal();
+          Alert.alert("Success", `Profile shared with ${userName}`);
+        },
+      },
+    ]);
   };
 
   const HistoryModal = ({
@@ -211,6 +258,68 @@ const Profile = () => {
     </Modal>
   );
 
+  const ShareModal = () => (
+    <Modal
+      visible={shareModalVisible}
+      transparent
+      animationType="none"
+      onRequestClose={closeShareModal}
+    >
+      <View style={styles.modalOverlay}>
+        <TouchableOpacity
+          style={styles.modalBackdrop}
+          onPress={closeShareModal}
+          activeOpacity={1}
+        />
+        <Animated.View
+          style={[
+            styles.shareModalContainer,
+            {
+              transform: [{ translateY: shareSlideAnim }],
+            },
+          ]}
+        >
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Share Access</Text>
+            <TouchableOpacity
+              onPress={closeShareModal}
+              style={styles.closeButton}
+            >
+              <MaterialIcons name="close" size={24} color={COLORS.secondary} />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView
+            style={styles.modalContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {doctors?.map((doctor: any) => (
+              <TouchableOpacity
+                key={doctor._id}
+                style={styles.userRow}
+                onPress={() => handleShareWithUser(doctor._id, doctor.name)}
+                activeOpacity={0.7}
+              >
+                <Image
+                  source={{ uri: doctor.profileImage }}
+                  style={styles.userAvatar}
+                />
+                <View style={styles.userInfo}>
+                  <Text style={styles.userName}>{doctor.name}</Text>
+                </View>
+                <MaterialIcons
+                  name="arrow-forward-ios"
+                  size={16}
+                  color={COLORS.accent}
+                />
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+
   const vaccinationHandler = async () => {
     const data = await getData("auth");
     try {
@@ -247,14 +356,44 @@ const Profile = () => {
     }
   };
 
+  const shareHandler = async () => {
+    const data = await getData("auth");
+    try {
+      const response = await api.get("/doctors", {
+        headers: {
+          Authorization: `Bearer ${data.accessToken}`,
+        },
+      });
+      openModal("share");
+      setDoctors(response.data.data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        Alert.alert(error.response?.data.message);
+      } else {
+        console.log(error);
+        Alert.alert("Unepectd Error Occured");
+      }
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.coverBg} />
+      <View style={styles.coverBg}>
+        {/* Share Icon */}
+        <TouchableOpacity
+          style={styles.shareIcon}
+          onPress={shareHandler}
+          activeOpacity={0.7}
+        >
+          <MaterialIcons name="share" size={24} color={COLORS.secondary} />
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.profileSection}>
         <Image source={{ uri: user.profileImage }} style={styles.avatar} />
 
         <View style={styles.headerText}>
-          <Text style={styles.userName}>{user.name}</Text>
+          <Text style={styles.userNameText}>{user.name}</Text>
           {user.isAdmin && <Text style={styles.adminBadge}>Family Admin</Text>}
           <Text style={styles.relation}>{user.relation}</Text>
         </View>
@@ -340,6 +479,7 @@ const Profile = () => {
         data={vaccinationHistory}
         visible={vaccinationModalVisible}
       />
+      <ShareModal />
     </ScrollView>
   );
 };
@@ -375,6 +515,20 @@ const styles = StyleSheet.create({
     height: 120,
     backgroundColor: COLORS.cover,
     width: "100%",
+    position: "relative",
+  },
+  shareIcon: {
+    position: "absolute",
+    top: 50,
+    right: 16,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 20,
+    padding: 8,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   profileSection: {
     flexDirection: "row",
@@ -397,7 +551,7 @@ const styles = StyleSheet.create({
     marginTop: 22,
     flex: 1,
   },
-  userName: {
+  userNameText: {
     fontSize: 20,
     fontWeight: "600",
     color: COLORS.secondary,
@@ -518,6 +672,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     height: screenHeight * 0.67,
   },
+  shareModalContainer: {
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    height: screenHeight * 0.6,
+  },
   modalHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -577,6 +737,35 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     marginTop: 12,
     textAlign: "center",
+  },
+  // Share modal specific styles
+  userRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.lightBg,
+  },
+  userAvatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 16,
+    backgroundColor: COLORS.accent,
+  },
+  userInfo: {
+    flex: 1,
+  },
+  userName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: COLORS.textPrimary,
+    marginBottom: 2,
+  },
+  userRelation: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
   },
 });
 
