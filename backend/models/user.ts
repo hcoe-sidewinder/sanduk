@@ -21,11 +21,7 @@ export interface IUser extends Document {
   bloodtype: Bloodtype;
   role?: Role;
   isDoctor?: boolean;
-  doctorDetails?: {
-    specialty: string;
-    licenseNumber: string;
-    clinicAddress: string;
-  };
+  allergies?: string[];
   familyAdmin?: mongoose.Types.ObjectId;
   relationToFamilyAdmin?: RelationToFamilyAdmin;
 }
@@ -80,30 +76,6 @@ const userSchema = new mongoose.Schema(
     allergies: {
       type: [String],
     },
-    // doctorDetails: {
-    //   specialty: {
-    //     type: String,
-    //     required: function (this: IUser) {
-    //       return this.isDoctor;
-    //     },
-    //   },
-    //   licenseNumber: {
-    //     type: String,
-    //     required: function (this: IUser) {
-    //       return this.isDoctor;
-    //     },
-    //     unique: function (this: IUser) {
-    //       return this.isDoctor;
-    //     }, // License numbers should be unique for doctors
-    //     trim: true,
-    //   },
-    //   clinicAddress: {
-    //     type: String,
-    //     required: function (this: IUser) {
-    //       return this.isDoctor;
-    //     }, // Type 'this'
-    //   },
-    // },
     familyAdmin: {
       // This field will store the ObjectId of the FAMILY_ADMIN user who manages this member
       type: mongoose.Schema.Types.ObjectId,
