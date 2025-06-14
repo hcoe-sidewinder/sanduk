@@ -1,0 +1,811 @@
+@host = http://{{hostname}}:{{port}}/api
+@hostname = localhost
+@port = 5173
+
+
+### newSession
+
+POST /users/sessions HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "nidNo": "ggjkmh",
+  "password": "password"
+}
+
+### newLabReports - Historical Data (June 2025 - Mid-month)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-06-15-A",
+  "date": "2025-06-15",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "98",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "138",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "195",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.7",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.0",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (June 2025 - Early month)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-06-08-B",
+  "date": "2025-06-08",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "92",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "125",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "180",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.2",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.7",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (May 2025 - Late)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-05-28-C",
+  "date": "2025-05-28",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "105",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "150",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "210",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "6.3",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.5",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (May 2025 - Mid)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-05-15-D",
+  "date": "2025-05-15",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "100",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "140",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "188",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.6",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.9",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (April 2025 - Late)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-04-25-E",
+  "date": "2025-04-25",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "90",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "120",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "170",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "4.8",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.2",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (April 2025 - Early)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-04-10-F",
+  "date": "2025-04-10",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "115",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "165",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "220",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "6.8",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.9",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (March 2025 - Late)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-03-28-G",
+  "date": "2025-03-28",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "97",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "135",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "185",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.5",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.8",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (March 2025 - Early)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-03-10-H",
+  "date": "2025-03-10",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "103",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "142",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "190",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.9",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.1",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (February 2025 - Late)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-02-20-I",
+  "date": "2025-02-20",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "95",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "130",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "175",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.0",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.5",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (February 2025 - Early)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-02-05-J",
+  "date": "2025-02-05",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "108",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "155",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "205",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "6.0",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.7",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (January 2025 - Late)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-01-25-K",
+  "date": "2025-01-25",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "93",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "128",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "182",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.3",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.6",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (January 2025 - Early)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2025-01-10-L",
+  "date": "2025-01-10",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "100",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "140",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "198",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "5.8",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.2",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (December 2024 - Late)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2024-12-20-M",
+  "date": "2024-12-20",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "88",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "115",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "165",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "4.5",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.0",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (November 2024 - Mid)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2024-11-15-N",
+  "date": "2024-11-15",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "110",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "160",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "215",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "6.6",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "3.9",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
+
+### newLabReports - Historical Data (October 2024 - Early)
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "GCTU-2024-10-01-O",
+  "date": "2024-10-01",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "90",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Glucose PP",
+      "result": "125",
+      "unit": "mg/dL",
+      "referenceRange": "<140",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "170",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "Uric Acid",
+      "result": "4.9",
+      "unit": "mg/dL",
+      "referenceRange": "3.0-7.0",
+      "method": "Uricase"
+    },
+    {
+      "testName": "TSH",
+      "result": "2.3",
+      "unit": "mIU/L",
+      "referenceRange": "0.4-4.0",
+      "method": "CLIA"
+    }
+  ]
+}
