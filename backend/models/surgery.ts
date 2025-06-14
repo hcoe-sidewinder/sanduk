@@ -4,8 +4,6 @@ export interface ISurgery extends Document {
   patient: mongoose.Types.ObjectId;
   name: string;
   date: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 const surgerySchema = new mongoose.Schema(
