@@ -138,10 +138,8 @@ export default function SignupScreen() {
 
     try {
       const response = await api.post("/users", { nidNo: documentId });
-      console.log(response.data);
     } catch (error) {
       const message = handleApiError(error as Error);
-      console.log("message is message", message.message);
       if (message.message === "NID_ALREADY_EXISTS") {
         setIsLoading(false);
         Alert.alert("User Already Exists");
@@ -208,12 +206,10 @@ export default function SignupScreen() {
     };
     try {
       const response = await api.post("/users", data);
-      console.log(response.data);
       setIsLoading(false);
       router.replace("/login");
     } catch (error) {
       const message = handleApiError(error as Error);
-      console.log("message is message", message.message);
       Alert.alert(message.message);
       setIsLoading(false);
     }
