@@ -56,13 +56,13 @@ Content-Type: application/json
 Host: {{host}}
 
 {
-  "nidNo": "aslkdjasdasd",
+  "nidNo": "aslkdjasldkj",
   "password": "password"
 }
 
 ### getUser
 
-GET /users/684c65c53413251cb28bdfc8 HTTP/1.1
+GET /admins/@me/members HTTP/1.1
 Accept: application/json
 Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
 Content-Type: application/json

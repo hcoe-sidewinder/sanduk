@@ -12,12 +12,15 @@ import { newVaccine } from "./users/userId/new-vaccine";
 import { getVaccines } from "./users/userId/get-vaccines";
 import { newHereditaries } from "./users/userId/new-hereditary";
 import { getHereditaries } from "./users/userId/get-hereditary";
+import { getUser } from "./users/userId/get-user";
+import { getMembers } from "./admins/get-members";
 
 export const resources: Record<string, Record<string, Resource>> = {
-  users: { newUser, getUsers, newUserSession },
+  users: { newUser, getUsers, newUserSession, getUser },
   labReports: { newReports, getReports },
   vaccines: { newVaccine, getVaccines },
   hereditarues: { newHereditaries, getHereditaries },
+  admins: { getMembers },
 };
 
 export const registerResources = (router: Router) => {
