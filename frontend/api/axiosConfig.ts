@@ -6,6 +6,8 @@ if (!BASE_API_URL) {
   throw new Error("BASE_URL is not defined");
 }
 
+console.log(BASE_API_URL);
+
 export const api = axios.create({
   baseURL: BASE_API_URL,
   withCredentials: true,
