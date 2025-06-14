@@ -49,6 +49,10 @@ const Profile = () => {
 
   const age = calculateAge(user.dob);
 
+  const editProfileHandling = () => {
+    router.push("/addInformation");
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.coverBg} />
@@ -61,10 +65,7 @@ const Profile = () => {
           <Text style={styles.relation}>{user.relation}</Text>
         </View>
 
-        <TouchableOpacity
-          onPress={() => alert("Edit profile")}
-          style={styles.editBtn}
-        >
+        <TouchableOpacity onPress={editProfileHandling} style={styles.editBtn}>
           <MaterialIcons name="edit" size={20} color="#fff" />
         </TouchableOpacity>
       </View>
