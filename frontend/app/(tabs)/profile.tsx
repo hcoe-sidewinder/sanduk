@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
   Dimensions,
   Alert,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getData } from "./home";
 import { api, handleApiError } from "@/api/axiosConfig";
@@ -53,6 +53,11 @@ interface Vaccination {
   date: string;
 }
 
+interface HereditaryRisk {
+  type: string;
+  onSetAge: number;
+}
+
 const Profile = () => {
   const router = useRouter();
   const [surgicalModalVisible, setSurgicalModalVisible] = useState(false);
@@ -70,49 +75,42 @@ const Profile = () => {
     profileImage: "https://placekitten.com/200/200",
     reportsCount: 12,
     upcomingCheckup: "2025-07-12",
-    hereditaryRisks: ["Diabetes", "Hypertension"],
   };
 
-  // // Sample data for surgical history
-  // const surgicalHistory = [
-  //   {
-  //     name: "Heart Surgery",
-  //     date: "2025-06-05T00:00:00.000+00:00",
-  //   },
-  //   {
-  //     name: "Appendectomy",
-  //     date: "2021-07-20T00:00:00.000+00:00",
-  //   },
-  //   {
-  //     name: "Knee Replacement",
-  //     date: "2020-03-15T00:00:00.000+00:00",
-  //   },
-  // ];
   const [vaccinationHistory, setVaccinationHistory] = useState<Vaccination[]>(
     []
   );
   const [surgicalHistory, setSurgicalHistory] = useState<Vaccination[]>([]);
-
-  // const vaccinationHistory = [
-  //   {
-  //     name: "COVID-19 Vaccine",
-  //     date: "2024-11-15T00:00:00.000+00:00",
-  //   },
-  //   {
-  //     name: "Flu Shot",
-  //     date: "2024-09-20T00:00:00.000+00:00",
-  //   },
-  //   {
-  //     name: "Hepatitis B",
-  //     date: "2023-05-10T00:00:00.000+00:00",
-  //   },
-  //   {
-  //     name: "Tetanus",
-  //     date: "2022-08-12T00:00:00.000+00:00",
-  //   },
-  // ];
+  const [hereditaryRisks, setHereditaryRisks] = useState<HereditaryRisk[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const age = calculateAge(user.dob);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchHereditaryRisks = async () => {
+        setLoading(true);
+        try {
+          const data = await getData("auth");
+          const response = await api.get(`/users/${data._id}/hereditaries`, {
+            headers: {
+              Authorization: `Bearer ${data.accessToken}`,
+            },
+          });
+          setHereditaryRisks(response.data.data || []);
+        } catch (error) {
+          console.log("Error fetching hereditary risks:", error);
+          const msg = handleApiError(error as Error);
+          console.log(msg.message);
+          Alert.alert("Error", msg.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchHereditaryRisks();
+    }, [])
+  );
 
   const editProfileHandling = () => {
     router.push("/addInformation");
@@ -287,14 +285,20 @@ const Profile = () => {
         />
       </View>
 
-      {/* heriditary */}
+      {/* hereditary risks */}
       <View style={styles.infoCard}>
         <Text style={styles.sectionTitle}>Hereditary Risks</Text>
-        {user.hereditaryRisks.map((risk, idx) => (
-          <Text key={idx} style={styles.bulletText}>
-            • {risk}
-          </Text>
-        ))}
+        {loading ? (
+          <Text style={styles.bulletText}>Loading...</Text>
+        ) : hereditaryRisks.length > 0 ? (
+          hereditaryRisks.map((risk, idx) => (
+            <Text key={idx} style={styles.bulletText}>
+              • {risk.type}
+            </Text>
+          ))
+        ) : (
+          <Text style={styles.bulletText}>No hereditary risks found</Text>
+        )}
       </View>
 
       <View style={styles.buttonGroup}>
