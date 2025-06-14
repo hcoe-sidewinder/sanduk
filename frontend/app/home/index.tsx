@@ -1,5 +1,5 @@
 import type React from "react";
-import { ScrollView, Text, StyleSheet } from "react-native";
+import { ScrollView, Text, StyleSheet, TouchableOpacity } from "react-native";
 import DataTimeline from "@/components/DataTimeline";
 import mockTimelineData from "@/constants/MockTimelineData";
 import { familyTreeData } from "@/constants/MockFamilyTreeData";
@@ -48,6 +48,9 @@ const HomeScreen: React.FC = () => {
   return (
     <AnimatedBackground>
       <ScrollView style={styles.container}>
+        <TouchableOpacity onPress={handleClear}>
+          <Text>Clear All</Text>
+        </TouchableOpacity>
         <SafeAreaView style={styles.container}>
           <FamilyTree data={familyTreeData} />
         </SafeAreaView>
