@@ -18,7 +18,7 @@ Content-Type: application/json
 Host: {{host}}
 
 {
-  "nidNo": "aslkdjasdasd",
+  "nidNo": "ggjkmh",
   "password": "password"
 }
 
@@ -47,29 +47,80 @@ Content-Type: application/json
 Host: {{host}}
 
 {
-  "sampleNo": "asldkjasld",
-  "date": "2025-05-14",
+  "sampleNo": "IF110391",
+  "date": "2025-06-11 08:52 AM",
   "specimen": "Urine",
   "tests": [
     {
       "testName": "Colour",
-      "result": "Yellow"
+      "result": "Light Yellow"
+    },
+    {
+      "testName": "Transparency",
+      "result": "Clear"
     },
     {
       "testName": "pH",
-      "result": "10.0",
-      "unit": "",
-      "referenceRange": "4.5 - 8.0",
-      "method": "Dipstick",
-      "conversionFactor": ""
+      "result": "5.0"
+    },
+    {
+      "testName": "Sugar",
+      "result": "Nil",
+      "unit": "mg/dL",
+      "referenceRange": "<50 = Normal,\r\n50 = Trace,\r\n100 = 1+,\r\n250 = 2+,\r\n500 = 3+,\r\n2000 = 4+"
+    },
+    {
+      "testName": "Pus Cells",
+      "result": "0",
+      "unit": "/HPF"
+    },
+    {
+      "testName": "RBCs",
+      "result": "Nil",
+      "unit": "/HPF"
+    },
+    {
+      "testName": "Epithelial Cells",
+      "result": "0",
+      "unit": "/HPF"
+    },
+    {
+      "testName": "Crystals",
+      "result": "0",
+      "unit": "/HPF"
+    },
+    {
+      "testName": "Casts",
+      "result": "0",
+      "unit": "/HPF"
     },
     {
       "testName": "Protein",
-      "result": "Negative",
-      "unit": "",
-      "referenceRange": "Negative",
-      "method": "Dipstick",
-      "conversionFactor": ""
+      "result": "Nil",
+      "unit": "mg/dL",
+      "referenceRange": "<15=Normal,\r\n15=Trace,\r\n30=1+,\r\n100=2+,\r\n300=3+,\r\n1000=4+",
+      "conversionFactor": "X 10 (mg/L)"
+    }
+  ]
+}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "IF110390",
+  "date": "2025-06-11 08:52 AM",
+  "specimen": "Stool",
+  "tests": [
+    {
+      "testName": "H. Pylori Antigen Test ",
+      "result": "Positive",
+      "conversionFactor": "Immunochromatogra phy"
     }
   ]
 }

@@ -1,0 +1,482 @@
+@host = http://{{hostname}}:{{port}}/api
+@hostname = localhost
+@port = 5173
+
+
+### getUsers
+
+GET /users HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+### newSession
+
+POST /users/sessions HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "nidNo": "ggjkmh",
+  "password": "password"
+}
+
+### getAllLabReports
+
+GET /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+### getLabReports
+
+GET /users/@me/reports?testName=pH HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "IF110391",
+  "date": "2025-06-11 08:52 AM",
+  "specimen": "Urine",
+  "tests": [
+    {
+      "testName": "Colour",
+      "result": "Light Yellow"
+    },
+    {
+      "testName": "Transparency",
+      "result": "Clear"
+    },
+    {
+      "testName": "pH",
+      "result": "5.0"
+    },
+    {
+      "testName": "Sugar",
+      "result": "Nil",
+      "unit": "mg/dL",
+      "referenceRange": "<50 = Normal,\r\n50 = Trace,\r\n100 = 1+,\r\n250 = 2+,\r\n500 = 3+,\r\n2000 = 4+"
+    },
+    {
+      "testName": "Pus Cells",
+      "result": "0",
+      "unit": "/HPF"
+    },
+    {
+      "testName": "RBCs",
+      "result": "Nil",
+      "unit": "/HPF"
+    },
+    {
+      "testName": "Epithelial Cells",
+      "result": "0",
+      "unit": "/HPF"
+    },
+    {
+      "testName": "Crystals",
+      "result": "0",
+      "unit": "/HPF"
+    },
+    {
+      "testName": "Casts",
+      "result": "0",
+      "unit": "/HPF"
+    },
+    {
+      "testName": "Protein",
+      "result": "Nil",
+      "unit": "mg/dL",
+      "referenceRange": "<15=Normal,\r\n15=Trace,\r\n30=1+,\r\n100=2+,\r\n300=3+,\r\n1000=4+",
+      "conversionFactor": "X 10 (mg/L)"
+    }
+  ]
+}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "IF110390",
+  "date": "2025-06-11 08:52 AM",
+  "specimen": "Stool",
+  "tests": [
+    {
+      "testName": "H. Pylori Antigen Test ",
+      "result": "Positive",
+      "conversionFactor": "Immunochromatogra phy"
+    }
+  ]
+}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "xyz789abc123",
+  "date": "2025-06-12",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "105",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Urea",
+      "result": "22",
+      "unit": "mg/dL",
+      "referenceRange": "13-43",
+      "method": "UREASE- GLDH",
+      "conversionFactor": "X 0.166 (mmol/L)"
+    },
+    {
+      "testName": "Creatinine",
+      "result": "1.0",
+      "unit": "mg/dL",
+      "referenceRange": "0.4-1.4",
+      "method": "JAFFES KINETIC",
+      "conversionFactor": "X 88.4(umol/L)"
+    },
+    {
+      "testName": "Sodium",
+      "result": "142",
+      "unit": "mEq/L",
+      "referenceRange": "135-145",
+      "method": "ISE"
+    },
+    {
+      "testName": "Potassium",
+      "result": "4.1",
+      "unit": "mEq/L",
+      "referenceRange": "3.5-5.1",
+      "method": "ISE"
+    }
+  ]
+}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "mnb123vbn456",
+  "date": "2025-05-20",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "125",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Urea",
+      "result": "48",
+      "unit": "mg/dL",
+      "referenceRange": "13-43",
+      "method": "UREASE- GLDH",
+      "conversionFactor": "X 0.166 (mmol/L)"
+    },
+    {
+      "testName": "Creatinine",
+      "result": "1.5",
+      "unit": "mg/dL",
+      "referenceRange": "0.4-1.4",
+      "method": "JAFFES KINETIC",
+      "conversionFactor": "X 88.4(umol/L)"
+    }
+  ]
+}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "qwe987rty654",
+  "date": "2025-05-05",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "95",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Urea",
+      "result": "25",
+      "unit": "mg/dL",
+      "referenceRange": "13-43",
+      "method": "UREASE- GLDH",
+      "conversionFactor": "X 0.166 (mmol/L)"
+    },
+    {
+      "testName": "Creatinine",
+      "result": "1.1",
+      "unit": "mg/dL",
+      "referenceRange": "0.4-1.4",
+      "method": "JAFFES KINETIC",
+      "conversionFactor": "X 88.4(umol/L)"
+    }
+  ]
+}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "hjk567lmn890",
+  "date": "2025-06-10",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "92",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Urea",
+      "result": "30",
+      "unit": "mg/dL",
+      "referenceRange": "13-43",
+      "method": "UREASE- GLDH",
+      "conversionFactor": "X 0.166 (mmol/L)"
+    },
+    {
+      "testName": "Creatinine",
+      "result": "0.9",
+      "unit": "mg/dL",
+      "referenceRange": "0.4-1.4",
+      "method": "JAFFES KINETIC",
+      "conversionFactor": "X 88.4(umol/L)"
+    },
+    {
+      "testName": "Total Cholesterol",
+      "result": "180",
+      "unit": "mg/dL",
+      "referenceRange": "<200",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "HDL Cholesterol",
+      "result": "55",
+      "unit": "mg/dL",
+      "referenceRange": ">40",
+      "method": "Enzymatic"
+    },
+    {
+      "testName": "LDL Cholesterol",
+      "result": "100",
+      "unit": "mg/dL",
+      "referenceRange": "<100",
+      "method": "Calculated"
+    }
+  ]
+}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "tre098poi765",
+  "date": "2025-06-05",
+  "specimen": "Urine",
+  "tests": [
+    {
+      "testName": "Epithelial Cells",
+      "result": "0",
+      "unit": "/HPF"
+    },
+    {
+      "testName": "Crystals",
+      "result": "0",
+      "unit": "/HPF"
+    },
+    {
+      "testName": "Specific Gravity",
+      "result": "1.015",
+      "unit": ""
+    },
+    {
+      "testName": "pH",
+      "result": "6.0",
+      "unit": ""
+    },
+    {
+      "testName": "Leukocyte Esterase",
+      "result": "Negative",
+      "unit": ""
+    }
+  ]
+}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "yui234fgh567",
+  "date": "2025-05-28",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "115",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Urea",
+      "result": "35",
+      "unit": "mg/dL",
+      "referenceRange": "13-43",
+      "method": "UREASE- GLDH",
+      "conversionFactor": "X 0.166 (mmol/L)"
+    },
+    {
+      "testName": "Creatinine",
+      "result": "1.2",
+      "unit": "mg/dL",
+      "referenceRange": "0.4-1.4",
+      "method": "JAFFES KINETIC",
+      "conversionFactor": "X 88.4(umol/L)"
+    }
+  ]
+}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "zxc789vbn012",
+  "date": "2025-05-15",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "100",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Urea",
+      "result": "28",
+      "unit": "mg/dL",
+      "referenceRange": "13-43",
+      "method": "UREASE- GLDH",
+      "conversionFactor": "X 0.166 (mmol/L)"
+    },
+    {
+      "testName": "Creatinine",
+      "result": "1.0",
+      "unit": "mg/dL",
+      "referenceRange": "0.4-1.4",
+      "method": "JAFFES KINETIC",
+      "conversionFactor": "X 88.4(umol/L)"
+    }
+  ]
+}
+
+### newLabReports
+
+POST /users/@me/reports HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "sampleNo": "mlp321qwe654",
+  "date": "2025-04-30",
+  "specimen": "Plasma",
+  "tests": [
+    {
+      "testName": "Glucose F",
+      "result": "88",
+      "unit": "mg/dL",
+      "referenceRange": "60 - 110",
+      "method": "HEXOKINASE",
+      "conversionFactor": "X 0.0555 (mmol/L)"
+    },
+    {
+      "testName": "Urea",
+      "result": "20",
+      "unit": "mg/dL",
+      "referenceRange": "13-43",
+      "method": "UREASE- GLDH",
+      "conversionFactor": "X 0.166 (mmol/L)"
+    },
+    {
+      "testName": "Creatinine",
+      "result": "0.8",
+      "unit": "mg/dL",
+      "referenceRange": "0.4-1.4",
+      "method": "JAFFES KINETIC",
+      "conversionFactor": "X 88.4(umol/L)"
+    }
+  ]
+}
