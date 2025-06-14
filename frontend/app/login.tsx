@@ -44,6 +44,7 @@ export default function LoginScreen() {
       await storeData("auth", data.data);
       setIsLoading(false);
       router.replace("/home");
+      console.log(data.data);
     } catch (error) {
       const message = handleApiError(error as Error);
       setIsLoading(false);
