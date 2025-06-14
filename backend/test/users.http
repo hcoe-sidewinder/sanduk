@@ -62,7 +62,7 @@ Host: {{host}}
 
 ### getUser
 
-GET /users/684c65c53413251cb28bdfc8 HTTP/1.1
+GET /users/@me HTTP/1.1
 Accept: application/json
 Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
 Content-Type: application/json
@@ -87,3 +87,15 @@ Accept: application/json
 Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
 Content-Type: application/json
 Host: {{host}}
+
+### newAllergies
+
+POST /users/@me/allergies HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "allergies": ["Almond", "Women"]
+}
