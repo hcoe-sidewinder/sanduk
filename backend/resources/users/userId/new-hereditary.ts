@@ -5,7 +5,8 @@ import mongoose from "mongoose";
 import { Message } from "../../../common/messages";
 import { hasPermission } from "../../lib/access-contorl/abac";
 import { HTTP403Error } from "../../../common/errors";
-import { Vaccine, type IVaccine } from "../../../models/vaccine";
+import { HereditaryDisease, type IHereditaryDisease } from "../../../models/hereditary-disease";
+import { ALL_HEREDITARY_DISEASE_TYPE } from "../../../models/types/hereditary-disease";
 
 const validators: Validators = checkSchema({
   userId: {
@@ -20,7 +21,7 @@ const validators: Validators = checkSchema({
       errorMessage: Message.NOT_A_MONGOID_OR_ME,
     },
   },
-  vaccines: {
+  hereditaries: {
     in: "body",
     isArray: {
       bail: true,
@@ -29,26 +30,31 @@ const validators: Validators = checkSchema({
       },
     },
   },
-  "vaccines.*.name": {
+  "hereditaries.*.type": {
     in: "body",
     notEmpty: {
-      errorMessage: Message.VACCINE_NAME_REQUIRED,
+      errorMessage: "HEREDITARY_TYPE_REQUIRED",
     },
     trim: true,
+    toUpperCase: true,
+    isIn: {
+      options: [ALL_HEREDITARY_DISEASE_TYPE],
+      errorMessage: "HEREDITARY_TYPE_INVALID",
+    },
   },
-  "vaccines.*.date": {
+  "hereditaries.*.onSetAge": {
     in: "body",
     notEmpty: {
-      errorMessage: Message.DATE_REQUIRED,
+      errorMessage: "ON_SET_AGE_REQUIRED",
     },
-    isDate: {
-      errorMessage: Message.DATE_INVALID,
+    isInt: {
+      errorMessage: "ON_SET_AGE_INVALID",
     },
   },
 });
 
-export const newVaccine: Resource = post(
-  "/users/:userId/vaccines",
+export const newHereditaries: Resource = post(
+  "/users/:userId/hereditaries",
   {
     auth: true,
     validators,
@@ -63,12 +69,12 @@ export const newVaccine: Resource = post(
       patient = userId;
     }
 
-    req.body.vaccines.forEach(async (element: IVaccine) => {
+    req.body.hereditaries.forEach(async (element: IHereditaryDisease) => {
       element["patient"] = patient;
 
-      if (!hasPermission(req.userContext, "vaccines", "create", element)) throw new HTTP403Error();
+      if (!hasPermission(req.userContext, "hereditaries", "create", element)) throw new HTTP403Error();
 
-      await Vaccine.create({ ...element });
+      await HereditaryDisease.create({ ...element });
     });
 
     res.empty();

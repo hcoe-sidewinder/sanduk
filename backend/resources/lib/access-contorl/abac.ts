@@ -1,3 +1,4 @@
+import type { IHereditaryDisease } from "../../../models/hereditary-disease";
 import type { ILabReport } from "../../../models/lab-report";
 import type { ISurgery } from "../../../models/surgery";
 import type { Role } from "../../../models/types/user";
@@ -32,6 +33,10 @@ type Permissions = {
   };
   labReports: {
     dataType: ILabReport;
+    action: "view" | "create" | "update" | "delete";
+  };
+  hereditaries: {
+    dataType: IHereditaryDisease;
     action: "view" | "create" | "update" | "delete";
   };
 };
@@ -84,6 +89,18 @@ const policy: Policy = {
       },
       delete: false,
     },
+    hereditaries: {
+      view: (userContext, data) => {
+        return userContext.sub == data.patient;
+      },
+      create: (userContext, data) => {
+        return userContext.sub == data.patient;
+      },
+      update: (userContext, data) => {
+        return userContext.sub == data.patient;
+      },
+      delete: false,
+    },
   },
   MEMBER: {
     users: {
@@ -121,6 +138,18 @@ const policy: Policy = {
       delete: false,
     },
     labReports: {
+      view: (userContext, data) => {
+        return userContext.sub == data.patient;
+      },
+      create: (userContext, data) => {
+        return userContext.sub == data.patient;
+      },
+      update: (userContext, data) => {
+        return userContext.sub == data.patient;
+      },
+      delete: false,
+    },
+    hereditaries: {
       view: (userContext, data) => {
         return userContext.sub == data.patient;
       },
