@@ -32,7 +32,7 @@ export const newUserSession: Resource = post(
   async (req: Request, res: Response) => {
     const { nidNo, password } = matchedData<{ nidNo: string; password: string }>(req);
 
-    const user = await User.findOne({ nidNo }, ["user", "isDoctor", "password", "role"]);
+    const user = await User.findOne({ nidNo }, ["_id", "isDoctor", "password", "role"]);
 
     if (!user) throw new HTTP404Error(Message.USER_NOT_FOUND);
 
@@ -61,8 +61,10 @@ export const newUserSession: Resource = post(
       refreshToken,
     });
 
+    const dbUser = await User.findOne({ nidNo }).lean();
+
     res.success({
-      userId: user._id,
+      ...dbUser,
       accessToken,
       refreshToken,
       atexp: accessPayload.exp,
