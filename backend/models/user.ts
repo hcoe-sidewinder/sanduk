@@ -70,7 +70,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ALL_ROLE,
-      default: "MEMBER",
+      default: "FAMILY_ADMIN",
       required: [true, "User role is required"],
     },
     isDoctor: {
