@@ -20,7 +20,16 @@ const COLORS = {
   cover: "#e0e3ff",
 };
 
-
+const calculateAge = (dob: string): number => {
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
 
 const Profile = () => {
   const router = useRouter();
@@ -37,7 +46,7 @@ const Profile = () => {
     hereditaryRisks: ["Diabetes", "Hypertension"],
   };
 
-  
+  const age = calculateAge(user.dob);
 
   return (
     <ScrollView style={styles.container}>
@@ -60,7 +69,7 @@ const Profile = () => {
 
       {/* user info */}
       <View style={styles.infoCard}>
-        
+        <InfoLabel label="Age" value={`${age} years`} />
         <InfoLabel label="Sex" value={user.sex} />
         <InfoLabel label="Blood Group" value={user.bloodGroup} />
         <InfoLabel label="Allergies" value={user.allergies.join(", ")} />
