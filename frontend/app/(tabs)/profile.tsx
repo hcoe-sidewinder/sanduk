@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,9 +6,14 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Modal,
+  Animated,
+  Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
+
+const { height: screenHeight } = Dimensions.get("window");
 
 const COLORS = {
   primary: "#bcc4f3",
@@ -31,8 +36,21 @@ const calculateAge = (dob: string): number => {
   return age;
 };
 
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
 const Profile = () => {
   const router = useRouter();
+  const [surgicalModalVisible, setSurgicalModalVisible] = useState(false);
+  const [vaccinationModalVisible, setVaccinationModalVisible] = useState(false);
+  const [slideAnim] = useState(new Animated.Value(screenHeight));
+
   const user = {
     name: "Aayush Shrestha",
     relation: "Son",
@@ -47,11 +65,144 @@ const Profile = () => {
     hereditaryRisks: ["Diabetes", "Hypertension"],
   };
 
+  // Sample data for surgical history
+  const surgicalHistory = [
+    {
+      name: "Heart Surgery",
+      date: "2025-06-05T00:00:00.000+00:00",
+    },
+    {
+      name: "Appendectomy",
+      date: "2021-07-20T00:00:00.000+00:00",
+    },
+    {
+      name: "Knee Replacement",
+      date: "2020-03-15T00:00:00.000+00:00",
+    },
+  ];
+
+  // Sample data for vaccination history
+  const vaccinationHistory = [
+    {
+      name: "COVID-19 Vaccine",
+      date: "2024-11-15T00:00:00.000+00:00",
+    },
+    {
+      name: "Flu Shot",
+      date: "2024-09-20T00:00:00.000+00:00",
+    },
+    {
+      name: "Hepatitis B",
+      date: "2023-05-10T00:00:00.000+00:00",
+    },
+    {
+      name: "Tetanus",
+      date: "2022-08-12T00:00:00.000+00:00",
+    },
+  ];
+
   const age = calculateAge(user.dob);
 
   const editProfileHandling = () => {
     router.push("/addInformation");
   };
+
+  const openModal = (type: "surgical" | "vaccination") => {
+    if (type === "surgical") {
+      setSurgicalModalVisible(true);
+    } else {
+      setVaccinationModalVisible(true);
+    }
+
+    // Animate slide up
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const closeModal = () => {
+    // Animate slide down
+    Animated.timing(slideAnim, {
+      toValue: screenHeight,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setSurgicalModalVisible(false);
+      setVaccinationModalVisible(false);
+    });
+  };
+
+  const HistoryModal = ({
+    title,
+    data,
+    visible,
+  }: {
+    title: string;
+    data: any[];
+    visible: boolean;
+  }) => (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="none"
+      onRequestClose={closeModal}
+    >
+      <View style={styles.modalOverlay}>
+        <TouchableOpacity
+          style={styles.modalBackdrop}
+          onPress={closeModal}
+          activeOpacity={1}
+        />
+        <Animated.View
+          style={[
+            styles.modalContainer,
+            {
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>{title}</Text>
+            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+              <MaterialIcons name="close" size={24} color={COLORS.secondary} />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView
+            style={styles.modalContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {data.length > 0 ? (
+              data.map((item, index) => (
+                <View key={index} style={styles.historyItem}>
+                  <View style={styles.historyDot} />
+                  <View style={styles.historyDetails}>
+                    <Text style={styles.historyName}>{item.name}</Text>
+                    <Text style={styles.historyDate}>
+                      {formatDate(item.date)}
+                    </Text>
+                  </View>
+                </View>
+              ))
+            ) : (
+              <View style={styles.emptyState}>
+                <MaterialIcons
+                  name="medical-services"
+                  size={48}
+                  color={COLORS.accent}
+                />
+                <Text style={styles.emptyText}>
+                  No {title.toLowerCase()} records found
+                </Text>
+              </View>
+            )}
+          </ScrollView>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
 
   return (
     <ScrollView style={styles.container}>
@@ -104,14 +255,14 @@ const Profile = () => {
       <View style={styles.buttonGroup}>
         <TouchableOpacity
           style={[styles.button, styles.primaryButton]}
-          onPress={() => alert("Surgical History coming soon")}
+          onPress={() => openModal("surgical")}
         >
           <Text style={styles.primaryButtonText}>Surgical History</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.button, styles.secondaryButton]}
-          onPress={() => alert("Vaccination History coming soon")}
+          onPress={() => openModal("vaccination")}
         >
           <Text style={styles.secondaryButtonText}>Vaccination History</Text>
         </TouchableOpacity>
@@ -128,6 +279,18 @@ const Profile = () => {
           <Text style={styles.switchText}>Switch Profile</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Modals */}
+      <HistoryModal
+        title="Surgical History"
+        data={surgicalHistory}
+        visible={surgicalModalVisible}
+      />
+      <HistoryModal
+        title="Vaccination History"
+        data={vaccinationHistory}
+        visible={vaccinationModalVisible}
+      />
     </ScrollView>
   );
 };
@@ -195,7 +358,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "600",
     color: "#d46504",
-    // backgroundColor: COLORS.secondary,
     paddingVertical: 2,
     alignSelf: "flex-start",
   },
@@ -291,6 +453,81 @@ const styles = StyleSheet.create({
   switchText: {
     color: COLORS.secondary,
     fontSize: 16,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
+  },
+  modalBackdrop: {
+    flex: 1,
+  },
+  modalContainer: {
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    height: screenHeight * 0.67,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.lightBg,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: COLORS.secondary,
+  },
+  closeButton: {
+    padding: 4,
+  },
+  modalContent: {
+    flex: 1,
+    padding: 20,
+  },
+  historyItem: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 20,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.lightBg,
+  },
+  historyDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: COLORS.secondary,
+    marginTop: 4,
+    marginRight: 16,
+  },
+  historyDetails: {
+    flex: 1,
+  },
+  historyName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: COLORS.textPrimary,
+    marginBottom: 4,
+  },
+  historyDate: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+  },
+  emptyState: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 40,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: COLORS.textSecondary,
+    marginTop: 12,
+    textAlign: "center",
   },
 });
 

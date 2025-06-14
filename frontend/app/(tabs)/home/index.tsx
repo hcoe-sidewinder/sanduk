@@ -53,7 +53,7 @@ const HomeScreen: React.FC = () => {
     <AnimatedBackground>
       <ScrollView style={styles.container}>
         <TouchableOpacity
-          onPress={handleAddMemberClick}
+          onPress={handleClear}
           className="w-46 rounded-lg text-white p-2 mt-10 bg-blue-600"
         >
           <Text>Add Members</Text>
