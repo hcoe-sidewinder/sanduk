@@ -1,7 +1,9 @@
 import axios, { AxiosError } from "axios";
 import Constants from "expo-constants";
 
-const BASE_API_URL = Constants.expoConfig?.extra?.EXPO_BASE_URL;
+// const BASE_API_URL = Constants.expoConfig?.extra?.EXPO_BASE_URL;
+const BASE_API_URL = "http://localhost:5173/api";
+
 if (!BASE_API_URL) {
   throw new Error("BASE_URL is not defined");
 }
