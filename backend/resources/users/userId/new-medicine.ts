@@ -3,9 +3,6 @@ import { post, type Resource, type Validators } from "../../lib/resources";
 import { checkSchema, matchedData } from "express-validator";
 import mongoose from "mongoose";
 import { Message } from "../../../common/messages";
-import { hasPermission } from "../../lib/access-contorl/abac";
-import { HTTP403Error } from "../../../common/errors";
-import { HereditaryDisease, type IHereditaryDisease } from "../../../models/hereditary-disease";
 import { ALL_FORMULATION } from "../../../models/types/medicine";
 import { Medicine } from "../../../models/medicine";
 
