@@ -1,16 +1,15 @@
+import { api, handleApiError } from "@/api/axiosConfig";
+import ReportDetails from "@/components/ReportDetails";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
   ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { TextInput } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-
-import ReportDetails from "@/components/ReportDetails";
-import { api, handleApiError } from "@/api/axiosConfig";
 import { getData } from "./home";
 
 const COLORS = {

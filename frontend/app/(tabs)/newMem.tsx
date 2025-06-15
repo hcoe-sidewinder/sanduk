@@ -2,23 +2,23 @@ import InputField from "@/components/InputField";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  KeyboardAvoidingView,
   Alert,
   Animated,
   Dimensions,
-  Modal,
   FlatList,
+  Image,
+  KeyboardAvoidingView,
+  Modal,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
-import { SafeAreaView } from "react-native-safe-area-context";
-import * as ImagePicker from "expo-image-picker";
 import { api, handleApiError } from "@/api/axiosConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 

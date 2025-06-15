@@ -1,5 +1,5 @@
-import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
   return (
@@ -40,6 +40,18 @@ export default function TabsLayout() {
       <Tabs.Screen name="profile" options={{ title: "Profile" }} />
       <Tabs.Screen
         name="index"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="newMem"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="addInformation"
         options={{
           href: null,
         }}

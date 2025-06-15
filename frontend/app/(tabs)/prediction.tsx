@@ -1,11 +1,11 @@
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 
 const Prediction = () => {
   return (
     <View>
-        <Text>Prediction</Text>
+      <Text>Prediction</Text>
     </View>
-  )
-}
+  );
+};
 
-export default Prediction
+export default Prediction;

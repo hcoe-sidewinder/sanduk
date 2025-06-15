@@ -1,20 +1,20 @@
+import { api, handleApiError } from "@/api/axiosConfig";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  Modal,
+  Alert,
   Animated,
   Dimensions,
-  Alert,
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { MaterialIcons } from "@expo/vector-icons";
 import { getData } from "./home";
-import { api, handleApiError } from "@/api/axiosConfig";
 
 const { height: screenHeight } = Dimensions.get("window");
 

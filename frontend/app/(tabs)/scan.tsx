@@ -1,33 +1,28 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import ReportDisplay, { ReportProps } from "@/components/ReportDisplay";
-import { reportData } from "@/constants/reportData";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { getBase64, parseLabReportFromImage } from "@/api/genai";
+import ReportDisplay from "@/components/ReportDisplay";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import { GoogleGenAI } from "@google/genai";
-
-
-
+import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
+import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
   ActivityIndicator,
   Alert,
+  Image,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
-import * as ImagePicker from "expo-image-picker";
-import * as DocumentPicker from "expo-document-picker";
-import { MaterialIcons } from "@expo/vector-icons";
-import { getBase64, parseLabReportFromImage } from "@/api/genai";
 
 const Scan = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<CameraType>("back");
   const cameraRef = useRef<CameraView | null>(null);
-  const [reportDisplay, setReportDisplay] = useState<any | null>(
-    null
-  );
+  const [reportDisplay, setReportDisplay] = useState<any | null>(null);
 
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [parsedText, setParsedText] = useState<string | null>(null);
@@ -36,27 +31,26 @@ const Scan = () => {
 
   const [imageUri, setImageUri] = useState<string | null>(null);
 
-useEffect(() => {
-  if (permission?.status !== "granted") {
-    requestPermission();
-  }
-}, [permission]);
-  
+  useEffect(() => {
+    if (permission?.status !== "granted") {
+      requestPermission();
+    }
+  }, [permission]);
 
-useFocusEffect(
-  useCallback(() => {
-    setIsCameraActive(true);
+  useFocusEffect(
+    useCallback(() => {
+      setIsCameraActive(true);
 
+      return () => {
+        setIsCameraActive(false);
+      };
+    }, [])
+  );
+  useEffect(() => {
     return () => {
       setIsCameraActive(false);
     };
-  }, [])
-);
-useEffect(() => {
-  return () => {
-    setIsCameraActive(false);
-  };
-}, []);
+  }, []);
 
   const takePicture = async () => {
     if (cameraRef.current) {
@@ -148,9 +142,6 @@ useEffect(() => {
       setLoading(false);
     }
   };
-  
-  
-
 
   const processCapturedImage = () => {
     if (!capturedImage) return;
@@ -167,7 +158,7 @@ useEffect(() => {
     setParsedText(null);
     setReportDisplay(null);
     setLoading(false);
-    setIsCameraActive(true); 
+    setIsCameraActive(true);
   };
 
   if (!permission) {
@@ -187,7 +178,7 @@ useEffect(() => {
     );
   }
 
-//show report
+  //show report
   if (reportDisplay && !loading) {
     return <ReportDisplay report={reportDisplay} onBack={resetView} />;
   }
@@ -213,7 +204,6 @@ useEffect(() => {
   //     </View>
   //   );
   // }
-  
 
   return (
     <View style={styles.container}>
@@ -224,7 +214,10 @@ useEffect(() => {
             <TouchableOpacity onPress={resetView} style={styles.cancelButton}>
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={processCapturedImage} style={styles.okButton}>
+            <TouchableOpacity
+              onPress={processCapturedImage}
+              style={styles.okButton}
+            >
               <Text style={styles.buttonText}>Process</Text>
             </TouchableOpacity>
           </View>

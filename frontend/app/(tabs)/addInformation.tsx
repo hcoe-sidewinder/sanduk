@@ -1,19 +1,19 @@
+import { api, handleApiError } from "@/api/axiosConfig";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-  View,
+  Alert,
+  Platform,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
-  Alert,
-  Platform,
-  StyleSheet,
+  View,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { Picker } from "@react-native-picker/picker";
 import { getData } from "./home";
-import { api, handleApiError } from "@/api/axiosConfig";
-import { router } from "expo-router";
 
 const MedicalRecordsScreen = () => {
   const [vaccinations, setVaccinations] = useState([
