@@ -1,16 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { ITest, ILabReport } from "@/app/(tabs)/report";
-
-const COLORS = {
-  primary: "#bcc4f3",
-  secondary: "#6368ba",
-  accent: "#b4b8cb",
-  lightBg: "#f4f5ff",
-  textPrimary: "#2e3171",
-  textSecondary: "#4b4e6d",
-  cover: "#e0e3ff",
-};
-
+import { COLORS } from "@/constants/Colors";
 interface ReportDetailsProps {
   report: ILabReport;
 }

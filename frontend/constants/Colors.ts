@@ -6,6 +6,18 @@
 const tintColorLight = "#b4b8cb";
 const tintColorDark = "#b4b8cb";
 
+
+
+export const COLORS = {
+  primary: "#bcc4f3",
+  secondary: "#6368ba",
+  accent: "#b4b8cb",
+  lightBg: "#f4f5ff",
+  textPrimary: "#2e3171",
+  textSecondary: "#4b4e6d",
+  cover: "#e0e3ff",
+};
+
 export const Colors = {
   primary: "#bcc4f3",
   secondary: "#6368ba",
