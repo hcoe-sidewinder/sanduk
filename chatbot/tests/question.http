@@ -1,0 +1,6 @@
+POST http://localhost:5000/query
+accept-type: application/json
+content-type: application/json
+
+bot.generate_answer("नेपालको राजधानी कहाँ हो?")  # Nepali query
+bot.generate_answer("Explain the key findings")  # English query

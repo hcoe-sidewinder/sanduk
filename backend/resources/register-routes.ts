@@ -21,6 +21,11 @@ import { shareProfile } from "./users/userId/share";
 import { newFCMToken } from "./users/userId/new-fcm-token";
 import { getFCMTokens } from "./users/userId/get-fcm-token";
 import { newAllergies } from "./users/userId/new-allergies";
+<<<<<<< HEAD
+=======
+import { newMedicines } from "./users/userId/new-medicine";
+import { getMedicines } from "./users/userId/get-medicines";
+>>>>>>> ammreet
 
 export const resources: Record<string, Record<string, Resource>> = {
   users: { newUser, getUsers, newUserSession, getUser, shareProfile, newFCMToken, getFCMTokens, newAllergies },
@@ -30,6 +35,10 @@ export const resources: Record<string, Record<string, Resource>> = {
   admins: { getMembers },
   doctors: { getDoctors },
   surgeries: { getSurgeries, newSurgeries },
+<<<<<<< HEAD
+=======
+  medicines: { newMedicines, getMedicines },
+>>>>>>> ammreet
 };
 
 export const registerResources = (router: Router) => {

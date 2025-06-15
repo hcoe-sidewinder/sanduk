@@ -53,7 +53,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
 
   useEffect(() => {
     const root = d3.hierarchy(data);
-    const treeLayout = d3.tree<TreeNode>().size([width - 100, height - 200]);
+    const treeLayout = d3.tree<TreeNode>().size([width - 50, height - 100]);
     const treeData = treeLayout(root);
 
     setNodes(treeData.descendants());

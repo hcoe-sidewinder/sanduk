@@ -64,7 +64,7 @@ const DataTimeline: React.FC<TimelineProps> = ({ member }) => {
         useNativeDriver: true,
       }),
     ]).start();
-  }, []);
+  }, [fadeAnim, scaleAnim]);
 
   const timelineWidth = Math.max(width - 40, member.events.length * 120);
 
