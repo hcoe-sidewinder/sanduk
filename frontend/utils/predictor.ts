@@ -23,19 +23,19 @@ export function predictDiseaseRisk(
 export const sampleModel: { diseases: Model } = {
   diseases: Object.fromEntries(
     [
-      "diabetes",
-      "hypertension",
       "heart_disease",
-      "asthma",
+      "diabetes",
       "cancer",
-      "arthritis",
-      "alzheimer",
+      "hypertension",
+      "alzheimers",
       "stroke",
+      "arthritis",
+      "osteoporosis",
       "kidney_disease",
       "depression",
       "obesity",
+      "kidney_disease",
       "parkinsons",
-      "autoimmune_disease",
     ].map((disease) => [
       disease,
       {

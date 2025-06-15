@@ -12,14 +12,14 @@ import {
   Animated,
   Dimensions,
 } from "react-native";
-import DataTimeline from "@/components/DataTimeline";
-import mockTimelineData from "@/constants/MockTimelineData";
 import { familyTreeData } from "@/constants/MockFamilyTreeData";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FamilyTree from "@/components/HereditaryTree";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import AnimatedBackground from "@/components/AnimatedBackground";
+import Graph from "@/components/graphs";
+
 
 const { width } = Dimensions.get("window");
 
@@ -62,23 +62,23 @@ const HomeScreen: React.FC = () => {
   };
 
   useEffect(() => {
-    const getAuth = async () => {
-      try {
-        const data = await getData("auth");
-        if (!data) {
-          router.replace("/login");
-          return;
-        }
-        setAuth(data);
-      } catch (error) {
-        console.error("Auth error:", error);
-        router.replace("/login");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    // const getAuth = async () => {
+    // try {
+    //   const data = await getData("auth");
+    //   if (!data) {
+    //     router.replace("/login");
+    //     return;
+    //   }
+    //   setAuth(data);
+    // } catch (error) {
+    //   console.error("Auth error:", error);
+    //   router.replace("/login");
+    // } finally {
+    //   setIsLoading(false);
+    // }
+    // };
 
-    getAuth();
+    // getAuth();
 
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -120,17 +120,17 @@ const HomeScreen: React.FC = () => {
     console.log("Profile pressed");
   };
 
-  if (isLoading) {
-    return (
-      <AnimatedBackground>
-        <View style={styles.loadingContainer}>
-          <Text style={[styles.loadingText, { color: colors.secondary }]}>
-            Loading...
-          </Text>
-        </View>
-      </AnimatedBackground>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <AnimatedBackground>
+  //       <View style={styles.loadingContainer}>
+  //         <Text style={[styles.loadingText, { color: colors.secondary }]}>
+  //           Loading...
+  //         </Text>
+  //       </View>
+  //     </AnimatedBackground>
+  //   );
+  // }
 
   return (
     <AnimatedBackground>
@@ -146,9 +146,37 @@ const HomeScreen: React.FC = () => {
           ]}
         >
           <View style={styles.welcomeSection}>
-            <Text style={[styles.welcomeText, { color: colors.textTertiary }]}>
-              Welcome back,
-            </Text>
+            <View>
+              <TouchableOpacity
+                onPress={handleProfilePress}
+                style={styles.profileContainer}
+              >
+                <View
+                  style={[
+                    styles.profileImageContainer,
+                    { backgroundColor: colors.primary + "20" },
+                  ]}
+                >
+                  <Image
+                    source={require("@/assets/images/login_image.png")}
+                    style={styles.profileImage}
+                    resizeMode="cover"
+                  />
+                  <View
+                    style={[
+                      styles.onlineIndicator,
+                      { backgroundColor: "#10b981" },
+                    ]}
+                  />
+                </View>
+              </TouchableOpacity>
+
+              <Text
+                style={[styles.welcomeText, { color: colors.textTertiary }]}
+              >
+                Welcome,
+              </Text>
+            </View>
             <Text style={[styles.userName, { color: colors.text }]}>
               {auth?.name || auth?.email?.split("@")[0] || "User"}
             </Text>
@@ -169,32 +197,10 @@ const HomeScreen: React.FC = () => {
                 </View>
               </TouchableOpacity>
             </Animated.View>
-
-            <TouchableOpacity
-              onPress={handleProfilePress}
-              style={styles.profileContainer}
-            >
-              <View
-                style={[
-                  styles.profileImageContainer,
-                  { backgroundColor: colors.primary + "20" },
-                ]}
-              >
-                <Image
-                  source={require("@/assets/images/login_image.png")}
-                  style={styles.profileImage}
-                  resizeMode="cover"
-                />
-                <View
-                  style={[
-                    styles.onlineIndicator,
-                    { backgroundColor: "#10b981" },
-                  ]}
-                />
-              </View>
-            </TouchableOpacity>
           </View>
         </Animated.View>
+        <br />
+        <br />
 
         <ScrollView
           style={styles.mainContent}
@@ -225,6 +231,8 @@ const HomeScreen: React.FC = () => {
             </View>
             <FamilyTree data={familyTreeData} />
           </Animated.View>
+          <br />
+          <br />
 
           <Animated.View
             style={[
@@ -235,123 +243,22 @@ const HomeScreen: React.FC = () => {
               },
             ]}
           >
-            <View style={styles.sectionHeader}>
-              <View style={styles.sectionTitleRow}>
-                <View
-                  style={[
-                    styles.sectionIcon,
-                    { backgroundColor: colors.accent + "20" },
-                  ]}
-                >
-                  <Text style={styles.sectionEmoji}>📊</Text>
-                </View>
-                <View style={styles.sectionTitleText}>
-                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                    Family Health Timeline
-                  </Text>
-                  <Text
-                    style={[
-                      styles.sectionSubtitle,
-                      { color: colors.textSecondary },
-                    ]}
-                  >
-                    Track medical history across generations
-                  </Text>
-                </View>
-              </View>
-            </View>
-
             <View style={styles.timelineContainer}>
-              {mockTimelineData.map((member, index) => (
-                <Animated.View
-                  key={member.memberId}
-                  style={{
-                    opacity: fadeAnim,
-                    transform: [
-                      {
-                        translateY: fadeAnim.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [30 * (index + 1), 0],
-                        }),
-                      },
-                    ],
-                  }}
-                >
-                  <DataTimeline member={member} />
-                </Animated.View>
-              ))}
-            </View>
-          </Animated.View>
-
-          <Animated.View
-            style={[
-              styles.statsSection,
-              {
-                opacity: fadeAnim,
-                transform: [{ scale: scaleAnim }],
-              },
-            ]}
-          >
-            <View style={styles.statsGrid}>
-              <View
-                style={[
-                  styles.statCard,
-                  { backgroundColor: colors.primary + "15" },
-                ]}
+              <Animated.View
+                style={{
+                  opacity: fadeAnim,
+                  transform: [
+                    {
+                      translateY: fadeAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [30, 0],
+                      }),
+                    },
+                  ],
+                }}
               >
-                <Text style={styles.statEmoji}>👨‍👩‍👧‍👦</Text>
-                <Text style={[styles.statNumber, { color: colors.secondary }]}>
-                  {mockTimelineData.length}
-                </Text>
-                <Text
-                  style={[styles.statLabel, { color: colors.textTertiary }]}
-                >
-                  Family Members
-                </Text>
-              </View>
-
-              <View
-                style={[
-                  styles.statCard,
-                  { backgroundColor: colors.accent + "15" },
-                ]}
-              >
-                <Text style={styles.statEmoji}>🏥</Text>
-                <Text style={[styles.statNumber, { color: colors.secondary }]}>
-                  {mockTimelineData.reduce(
-                    (total, member) => total + member.events.length,
-                    0
-                  )}
-                </Text>
-                <Text
-                  style={[styles.statLabel, { color: colors.textTertiary }]}
-                >
-                  Health Events
-                </Text>
-              </View>
-
-              <View
-                style={[
-                  styles.statCard,
-                  { backgroundColor: colors.secondary + "15" },
-                ]}
-              >
-                <Text style={styles.statEmoji}>📈</Text>
-                <Text style={[styles.statNumber, { color: colors.secondary }]}>
-                  {
-                    new Set(
-                      mockTimelineData.flatMap((member) =>
-                        member.events.map((event) => event.type)
-                      )
-                    ).size
-                  }
-                </Text>
-                <Text
-                  style={[styles.statLabel, { color: colors.textTertiary }]}
-                >
-                  Condition Types
-                </Text>
-              </View>
+                <Graph />
+              </Animated.View>
             </View>
           </Animated.View>
 

@@ -26,7 +26,6 @@ import AnimatedBackground from "@/components/AnimatedBackground";
 
 const { width, height } = Dimensions.get("window");
 
-// Simulated backend data for health metrics
 const healthMetrics = {
   glucose: {
     name: "Blood Glucose",
@@ -317,14 +316,12 @@ const AnimatedGraph: React.FC<AnimatedGraphProps> = ({
   };
 
   useEffect(() => {
-    // Animate path
     Animated.timing(pathAnim, {
       toValue: 1,
       duration: 2000,
       useNativeDriver: false,
     }).start();
 
-    // Animate dots with stagger
     const dotAnimations = dotsAnim.map((anim, index) =>
       Animated.timing(anim, {
         toValue: 1,
@@ -396,7 +393,6 @@ const AnimatedGraph: React.FC<AnimatedGraphProps> = ({
           );
         })}
 
-        {/* Animated path */}
         <Path
           d={pathData}
           stroke="url(#lineGradient)"
@@ -703,7 +699,7 @@ const HealthModal: React.FC<HealthModalProps> = ({
   );
 };
 
-export default function Reminder() {
+export default function Graph() {
   const [selectedMetric, setSelectedMetric] = useState<
     keyof typeof healthMetrics | null
   >(null);
