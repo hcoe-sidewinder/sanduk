@@ -16,7 +16,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { getData } from "./home";
 import { api, handleApiError } from "@/api/axiosConfig";
 import { AxiosError } from "axios";
-import { measure } from "react-native-reanimated";
 
 const { height: screenHeight } = Dimensions.get("window");
 
@@ -72,8 +71,12 @@ const Profile = () => {
   const [surgicalModalVisible, setSurgicalModalVisible] = useState(false);
   const [vaccinationModalVisible, setVaccinationModalVisible] = useState(false);
   const [shareModalVisible, setShareModalVisible] = useState(false);
+  const [switchProfileModalVisible, setSwitchProfileModalVisible] =
+    useState(false);
   const [slideAnim] = useState(new Animated.Value(screenHeight));
   const [shareSlideAnim] = useState(new Animated.Value(screenHeight));
+  const [switchProfileScaleAnim] = useState(new Animated.Value(0));
+  const [switchProfileOpacityAnim] = useState(new Animated.Value(0));
   const [doctors, setDoctors] = useState();
 
   const user = {
@@ -152,6 +155,60 @@ const Profile = () => {
       }).start();
     }
   };
+  const [members, setMembers] = useState([]);
+  const switchUserHandling = async () => {
+    const data = await getData("auth");
+    try {
+      const response = await api.get(`/admins/${data._id}/members`, {
+        headers: {
+          Authorization: `Bearer ${data.accessToken}`,
+        },
+      });
+      setMembers(response.data.data);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        Alert.alert(error.response?.data.message);
+      } else {
+        Alert.alert("Unexpected Error occured" + error);
+      }
+    }
+  };
+
+  const openSwitchProfileModal = async () => {
+    await switchUserHandling();
+    setSwitchProfileModalVisible(true);
+
+    Animated.parallel([
+      Animated.timing(switchProfileScaleAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(switchProfileOpacityAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const closeSwitchProfileModal = () => {
+    Animated.parallel([
+      Animated.timing(switchProfileScaleAnim, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.timing(switchProfileOpacityAnim, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setSwitchProfileModalVisible(false);
+    });
+  };
 
   const closeModal = () => {
     Animated.timing(slideAnim, {
@@ -186,6 +243,24 @@ const Profile = () => {
         },
       },
     ]);
+  };
+
+  const handleSwitchProfile = (userId: string, userName: string) => {
+    Alert.alert(
+      "Switch Profile",
+      `Are you sure you want to switch to ${userName}'s profile?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Switch",
+          onPress: () => {
+            console.log(`Switching to profile: ${userId}`);
+            closeSwitchProfileModal();
+            Alert.alert("Success", `Switched to ${userName}'s profile`);
+          },
+        },
+      ]
+    );
   };
 
   const HistoryModal = ({
@@ -320,6 +395,74 @@ const Profile = () => {
     </Modal>
   );
 
+  const SwitchProfileModal = () => (
+    <Modal
+      visible={switchProfileModalVisible}
+      transparent
+      animationType="none"
+      onRequestClose={closeSwitchProfileModal}
+    >
+      <View style={styles.switchModalOverlay}>
+        <TouchableOpacity
+          style={styles.switchModalBackdrop}
+          onPress={closeSwitchProfileModal}
+          activeOpacity={1}
+        />
+        <Animated.View
+          style={[
+            styles.switchModalContainer,
+            {
+              transform: [{ scale: switchProfileScaleAnim }],
+              opacity: switchProfileOpacityAnim,
+            },
+          ]}
+        >
+          <View style={styles.switchModalHeader}>
+            <Text style={styles.switchModalTitle}>Switch Profile</Text>
+            <TouchableOpacity
+              onPress={closeSwitchProfileModal}
+              style={styles.closeButton}
+            >
+              <MaterialIcons name="close" size={24} color={COLORS.secondary} />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView
+            style={styles.switchModalContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {members.map((user: any) => (
+              <TouchableOpacity
+                key={user._id}
+                style={styles.switchUserRow}
+                onPress={() => handleSwitchProfile(user._id, user.name)}
+                activeOpacity={0.7}
+              >
+                <Image
+                  source={{ uri: user.profileImage }}
+                  style={styles.switchUserAvatar}
+                />
+                <View style={styles.switchUserInfo}>
+                  <View style={styles.switchUserNameContainer}>
+                    <Text style={styles.switchUserName}>{user.name}</Text>
+                  </View>
+                  <Text style={styles.switchUserRelation}>
+                    {user.relationToFamilyAdmin}
+                  </Text>
+                </View>
+                <MaterialIcons
+                  name="arrow-forward-ios"
+                  size={16}
+                  color={COLORS.accent}
+                />
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+
   const vaccinationHandler = async () => {
     const data = await getData("auth");
     try {
@@ -379,7 +522,7 @@ const Profile = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.coverBg}>
-        {/* Share Icon */}
+ 
         <TouchableOpacity
           style={styles.shareIcon}
           onPress={shareHandler}
@@ -457,7 +600,7 @@ const Profile = () => {
 
         <TouchableOpacity
           style={[styles.switchButton]}
-          onPress={() => alert("Profile switcher coming soon")}
+          onPress={openSwitchProfileModal}
         >
           <MaterialIcons
             name="switch-account"
@@ -468,7 +611,6 @@ const Profile = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Modals */}
       <HistoryModal
         title="Surgical History"
         data={surgicalHistory}
@@ -480,6 +622,7 @@ const Profile = () => {
         visible={vaccinationModalVisible}
       />
       <ShareModal />
+      <SwitchProfileModal />
     </ScrollView>
   );
 };
@@ -766,6 +909,94 @@ const styles = StyleSheet.create({
   userRelation: {
     fontSize: 14,
     color: COLORS.textSecondary,
+  },
+  // Switch Profile Modal styles
+  switchModalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  switchModalBackdrop: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  switchModalContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    width: "100%",
+    maxHeight: screenHeight * 0.7,
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+  },
+  switchModalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.lightBg,
+  },
+  switchModalTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: COLORS.secondary,
+  },
+  switchModalContent: {
+    maxHeight: screenHeight * 0.5,
+    paddingHorizontal: 20,
+  },
+  switchUserRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.lightBg,
+  },
+  switchUserAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginRight: 16,
+    backgroundColor: COLORS.accent,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+  },
+  switchUserInfo: {
+    flex: 1,
+  },
+  switchUserNameContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  switchUserName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: COLORS.textPrimary,
+    marginRight: 8,
+  },
+  switchUserRelation: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+  },
+  adminBadgeContainer: {
+    backgroundColor: "#d46504",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  adminBadgeText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#fff",
   },
 });
 
