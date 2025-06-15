@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   //   fontWeight: "600",
   // },
   cancelText: {
-    color: COLORS.cover,
+    color: COLORS.secondary,
     fontWeight: "600",
   },
 });

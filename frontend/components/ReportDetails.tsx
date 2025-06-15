@@ -11,7 +11,6 @@ const COLORS = {
   cover: "#e0e3ff",
 };
 
-
 interface ReportDetailsProps {
   report: ILabReport;
 }

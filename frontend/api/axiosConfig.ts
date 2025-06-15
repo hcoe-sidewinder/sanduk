@@ -8,8 +8,6 @@ if (!BASE_API_URL) {
 }
 
 console.log(BASE_API_URL);
-
-
 export const api = axios.create({
   baseURL: BASE_API_URL,
   withCredentials: true,
