@@ -3,7 +3,7 @@ import mongoose, { type Document } from "mongoose";
 export interface ITest extends Document {
   testName: string;
   result: string;
-  unit?: string;
+  unit: string;
   referenceRange?: string;
   method?: string;
   conversionFactor?: string;

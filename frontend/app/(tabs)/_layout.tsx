@@ -2,6 +2,15 @@ import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function TabsLayout() {
+  const COLORS = {
+    primary: "#bcc4f3",
+    secondary: "#6368ba",
+    accent: "#b4b8cb",
+    lightBg: "#f4f5ff",
+    textPrimary: "#2e3171",
+    textSecondary: "#4b4e6d",
+    cover: "#e0e3ff",
+  };
   return (
     <Tabs
       initialRouteName="index"
@@ -17,7 +26,7 @@ export default function TabsLayout() {
             case "prediction":
               iconName = "analytics-outline";
               break;
-            case "dashboard":
+            case "home":
               iconName = "grid-outline";
               break;
             case "report":
@@ -29,8 +38,16 @@ export default function TabsLayout() {
           }
           return <Ionicons name={iconName as any} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#007AFF",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: COLORS.lightBg,
+        tabBarInactiveTintColor: COLORS.textPrimary,
+        tabBarStyle: {
+          backgroundColor: COLORS.secondary,
+          borderTopColor: COLORS.secondary,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "600",
+        },
       })}
     >
       <Tabs.Screen name="scan" options={{ title: "Scan" }} />

@@ -1,6 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import ReportDisplay from "@/components/ReportDisplay";
+import { useCallback, useEffect, useRef, useState } from "react";
+import ReportDisplay, { ReportProps } from "@/components/ReportDisplay";
 import { reportData } from "@/constants/reportData";
+import { useFocusEffect } from "@react-navigation/native";
+import { GoogleGenAI } from "@google/genai";
+
+
 
 import {
   View,
@@ -15,24 +19,22 @@ import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { MaterialIcons } from "@expo/vector-icons";
+import { getBase64, parseLabReportFromImage } from "@/api/genai";
 
 const Scan = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<CameraType>("back");
   const cameraRef = useRef<CameraView | null>(null);
-  const [reportDisplay, setReportDisplay] = useState<typeof reportData | null>(
+  const [reportDisplay, setReportDisplay] = useState<any | null>(
     null
   );
 
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [parsedText, setParsedText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isCameraActive, setIsCameraActive] = useState(false);
 
-//   useEffect(() => {
-//     if (permission && !permission.granted && permission.canAskAgain) {
-//       requestPermission();
-//     }
-//   }, [permission]);
+  const [imageUri, setImageUri] = useState<string | null>(null);
 
 useEffect(() => {
   if (permission?.status !== "granted") {
@@ -41,12 +43,26 @@ useEffect(() => {
 }, [permission]);
   
 
+useFocusEffect(
+  useCallback(() => {
+    setIsCameraActive(true);
+
+    return () => {
+      setIsCameraActive(false);
+    };
+  }, [])
+);
+useEffect(() => {
+  return () => {
+    setIsCameraActive(false);
+  };
+}, []);
+
   const takePicture = async () => {
     if (cameraRef.current) {
       try {
         const photo = await cameraRef.current.takePictureAsync({
           quality: 0.8,
-          base64: true,
         });
         if (photo) {
           setCapturedImage(photo.uri);
@@ -115,17 +131,28 @@ useEffect(() => {
   }) => {
     try {
       setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        setReportDisplay(reportData);
-      }, 2000); 
+
+      const base64 = await getBase64(file.uri);
+      const parsed = await parseLabReportFromImage(base64, file.type);
+
+      if (parsed) {
+        console.log(parsed);
+        setReportDisplay(parsed);
+      } else {
+        Alert.alert("Parsing Failed", "Could not extract report data.");
+      }
     } catch (error) {
+      console.error("GenAI processing error:", error);
+      Alert.alert("Error", "Something went wrong while processing.");
+    } finally {
       setLoading(false);
-      Alert.alert("Error", "Mock failed");
     }
   };
+  
+  
 
-  const handleOK = () => {
+
+  const processCapturedImage = () => {
     if (!capturedImage) return;
     const file = {
       uri: capturedImage,
@@ -140,6 +167,7 @@ useEffect(() => {
     setParsedText(null);
     setReportDisplay(null);
     setLoading(false);
+    setIsCameraActive(true); 
   };
 
   if (!permission) {
@@ -173,6 +201,20 @@ useEffect(() => {
     );
   }
 
+  // if (!loading && !reportDisplay && capturedImage === null) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <Text style={{ color: "#fff", textAlign: "center", marginTop: 20 }}>
+  //         Something went wrong. Try scanning again.
+  //       </Text>
+  //       <TouchableOpacity onPress={resetView} style={styles.button}>
+  //         <Text style={styles.buttonText}>Retry</Text>
+  //       </TouchableOpacity>
+  //     </View>
+  //   );
+  // }
+  
+
   return (
     <View style={styles.container}>
       {capturedImage ? (
@@ -182,14 +224,16 @@ useEffect(() => {
             <TouchableOpacity onPress={resetView} style={styles.cancelButton}>
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleOK} style={styles.okButton}>
+            <TouchableOpacity onPress={processCapturedImage} style={styles.okButton}>
               <Text style={styles.buttonText}>Process</Text>
             </TouchableOpacity>
           </View>
         </View>
       ) : (
         <>
-          <CameraView style={styles.camera} facing={facing} ref={cameraRef} />
+          {isCameraActive && (
+            <CameraView style={styles.camera} facing={facing} ref={cameraRef} />
+          )}
           <View style={styles.cameraControls}>
             <TouchableOpacity
               onPress={pickFromGallery}
