@@ -16,6 +16,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { getData } from "./home";
 import { api, handleApiError } from "@/api/axiosConfig";
 import { AxiosError } from "axios";
+import { storeData } from "../login";
 
 const { height: screenHeight } = Dimensions.get("window");
 
@@ -78,7 +79,7 @@ const Profile = () => {
   const [switchProfileScaleAnim] = useState(new Animated.Value(0));
   const [switchProfileOpacityAnim] = useState(new Animated.Value(0));
   const [doctors, setDoctors] = useState();
-
+  const [nowUser, setNowUser] = useState<any>();
   const user = {
     name: "Aayush Shrestha",
     relation: "Son",
@@ -92,6 +93,14 @@ const Profile = () => {
     upcomingCheckup: "2025-07-12",
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getData("auth");
+      setNowUser(data);
+    };
+    fetchData();
+  }, []);
+
   const [vaccinationHistory, setVaccinationHistory] = useState<Vaccination[]>(
     []
   );
@@ -99,7 +108,7 @@ const Profile = () => {
   const [hereditaryRisks, setHereditaryRisks] = useState<HereditaryRisk[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const age = calculateAge(user.dob);
+  const age = calculateAge(nowUser?.dob.split("T")[0]);
 
   useFocusEffect(
     useCallback(() => {
@@ -239,7 +248,7 @@ const Profile = () => {
         onPress: () => {
           console.log(`Sharing profile with user: ${userId}`);
           closeShareModal();
-          Alert.alert("Success", `Profile shared with ${userName}`);
+          router.replace("/medicine");
         },
       },
     ]);
@@ -253,8 +262,8 @@ const Profile = () => {
         { text: "Cancel", style: "cancel" },
         {
           text: "Switch",
-          onPress: () => {
-            console.log(`Switching to profile: ${userId}`);
+          onPress: async () => {
+            await storeData("doctorId", userId);
             closeSwitchProfileModal();
             Alert.alert("Success", `Switched to ${userName}'s profile`);
           },
@@ -522,7 +531,6 @@ const Profile = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.coverBg}>
- 
         <TouchableOpacity
           style={styles.shareIcon}
           onPress={shareHandler}
@@ -533,11 +541,13 @@ const Profile = () => {
       </View>
 
       <View style={styles.profileSection}>
-        <Image source={{ uri: user.profileImage }} style={styles.avatar} />
+        <Image source={{ uri: nowUser?.profileImage }} style={styles.avatar} />
 
         <View style={styles.headerText}>
-          <Text style={styles.userNameText}>{user.name}</Text>
-          {user.isAdmin && <Text style={styles.adminBadge}>Family Admin</Text>}
+          <Text style={styles.userNameText}>{nowUser?.name}</Text>
+          {nowUser?.role === "FAMILY_ADMIN" && (
+            <Text style={styles.adminBadge}>Family Admin</Text>
+          )}
           <Text style={styles.relation}>{user.relation}</Text>
         </View>
 
@@ -549,9 +559,8 @@ const Profile = () => {
       {/* user info */}
       <View style={styles.infoCard}>
         <InfoLabel label="Age" value={`${age} years`} />
-        <InfoLabel label="Sex" value={user.sex} />
-        <InfoLabel label="Blood Group" value={user.bloodGroup} />
-        <InfoLabel label="Allergies" value={user.allergies.join(", ")} />
+        <InfoLabel label="Sex" value={nowUser?.sex} />
+        <InfoLabel label="Blood Group" value={nowUser?.bloodtype} />
       </View>
 
       <View style={styles.summaryRow}>
