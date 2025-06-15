@@ -9,10 +9,9 @@ import {
 import { TextInput } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-
 import ReportDetails from "@/components/ReportDetails";
 import { api, handleApiError } from "@/api/axiosConfig";
-import { getData } from "../home";
+import { getData } from "./home";
 
 const COLORS = {
   primary: "#bcc4f3",
@@ -24,52 +23,52 @@ const COLORS = {
   cover: "#e0e3ff",
 };
 
-const mockReports: ILabReport[] = [
-  {
-    _id: "1",
-    testTitle: "Urine Test",
-    date: "2025-06-10",
-    sampleNo: "UR12345",
-    tests: [
-      {
-        testName: "Color",
-        result: "Light Yellow",
-      },
-      {
-        testName: "Sugar",
-        result: "Nil",
-        unit: "mg/dL",
-        referenceRange: "<50 = Normal, 50 = Trace, 100 = 1+",
-      },
-      {
-        testName: "pH",
-        result: "5.00",
-      },
-    ],
-  },
-  {
-    _id: "2",
-    testTitle: "Blood Test",
-    date: "2025-06-01",
-    sampleNo: "BL67890",
-    tests: [
-      {
-        testName: "Hemoglobin",
-        result: "13.5",
-        unit: "g/dL",
-        referenceRange: "12 - 16",
-      },
-      {
-        testName: "WBC Count",
-        result: "7000",
-        unit: "cells/mcL",
-        referenceRange: "4500 – 11000",
-      },
-    ],
-  },
-];
+// const mockReports: ILabReport[] = [
+//   {
+//     _id: "1",
+//     testTitle: "Urine Test",
+//     date: "2025-06-10",
+//     sampleNo: "UR12345",
+//     tests: [
+//       {
+//         testName: "Color",
+//         result: "Light Yellow",
+//       },
+//       {
+//         testName: "Sugar",
+//         result: "Nil",
+//         unit: "mg/dL",
+//         referenceRange: "<50 = Normal, 50 = Trace, 100 = 1+",
+//       },
+//       {
+//         testName: "pH",
+//         result: "5.00",
+//       },
+//     ],
+//   },
+//   {
+//     _id: "2",
+//     testTitle: "Blood Test",
+//     date: "2025-06-01",
+//     sampleNo: "BL67890",
+//     tests: [
+//       {
+//         testName: "Hemoglobin",
+//         result: "13.5",
+//         unit: "g/dL",
+//         referenceRange: "12 - 16",
+//       },
+//       {
+//         testName: "WBC Count",
+//         result: "7000",
+//         unit: "cells/mcL",
+//         referenceRange: "4500 – 11000",
+//       },
+//     ],
+//   },
+// ];
 
-interface ITest {
+export interface ITest {
   testName: string;
   result: string;
   unit?: string;
@@ -78,9 +77,9 @@ interface ITest {
   conversionFactor?: string;
 }
 
-interface ILabReport {
+export interface ILabReport {
   _id: string;
-  testTitle: string;
+  specimen: string;
   date: string;
   sampleNo: string;
   tests: ITest[];
@@ -89,6 +88,7 @@ interface ILabReport {
 const Report = () => {
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [labReports, setLabReports] = useState<ILabReport[]>([]);
 
   const toggleExpand = (id: string) => {
     setExpandedIds((prev) =>
@@ -96,25 +96,28 @@ const Report = () => {
     );
   };
 
-useEffect(()=>{
-  const fetchLabReports = async () => {
-    const data = await getData("auth");
-  try {
+  useEffect(() => {
+    const fetchLabReports = async () => {
+      const data = await getData("auth");
+      try {
+        const response = await api.get(`/users/${data._id}/reports`, {
+          headers: {
+            Authorization: `Bearer ${data.accessToken}`,
+          },
+        });
+        setLabReports(response.data.data);
+      } catch (error) {
+        const message = handleApiError(error as Error);
+        console.log(message.message);
+      }
+    };
+    fetchLabReports();
+  }, []);
 
-    const response = await api.get(`/users/${data._id}/reports`);
-    console.log(response.data)
-  } catch (error) {
-    const message = handleApiError(error as Error);
-    console.log(message.message);
-  }
-  }
-  fetchLabReports();
-},[])
-
-  const filteredReports = mockReports.filter((report) => {
+  const filteredReports = labReports.filter((report) => {
     const query = searchQuery.toLowerCase();
     return (
-      report.testTitle.toLowerCase().includes(query) ||
+      report.specimen.toLowerCase().includes(query) ||
       report.tests.some((test) => test.testName.toLowerCase().includes(query))
     );
   });
@@ -156,7 +159,7 @@ useEffect(()=>{
               >
                 <View style={styles.cardHeader}>
                   <View style={styles.reportInfo}>
-                    <Text style={styles.reportTitle}>{report.testTitle}</Text>
+                    <Text style={styles.reportTitle}>{report.specimen}</Text>
                     <Text style={styles.dateText}>
                       {new Date(report.date).toLocaleDateString("en-US", {
                         weekday: "short",
@@ -317,7 +320,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     borderWidth: 1,
     borderColor: COLORS.cover,
-    paddingRight: 40, 
+    paddingRight: 40,
   },
   searchIcon: {
     position: "absolute",

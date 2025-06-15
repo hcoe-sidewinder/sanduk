@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
+import { ITest, ILabReport } from "@/app/(tabs)/report";
 
 const COLORS = {
   primary: "#bcc4f3",
@@ -10,28 +11,12 @@ const COLORS = {
   cover: "#e0e3ff",
 };
 
-interface ITest {
-  testName: string;
-  result: string;
-  unit?: string;
-  referenceRange?: string;
-  method?: string;
-  conversionFactor?: string;
-}
-
-interface ILabReport {
-  _id: string;
-  testTitle: string;
-  date: string;
-  sampleNo: string;
-  tests: ITest[];
-}
 
 interface ReportDetailsProps {
   report: ILabReport;
 }
-
 const ReportDetails = ({ report }: ReportDetailsProps) => {
+  console.log(report);
   return (
     <View style={styles.container}>
       <View style={styles.sampleContainer}>
@@ -58,8 +43,6 @@ const ReportDetails = ({ report }: ReportDetailsProps) => {
           </View>
         ))}
       </View>
-
-      {/* Additional details section if method or conversion factor exists */}
       {report.tests.some((test) => test.method || test.conversionFactor) && (
         <View style={styles.additionalInfo}>
           <Text style={styles.additionalTitle}>Additional Information</Text>

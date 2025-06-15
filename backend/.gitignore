@@ -2,3 +2,5 @@ pnpm-lock.yaml
 .env
 node_modules/
 build/
+
+ocr_service/venv/

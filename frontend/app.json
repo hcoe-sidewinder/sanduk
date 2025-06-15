@@ -3,7 +3,8 @@
     "name": "frontend",
     "slug": "frontend",
     "extra": {
-      "EXPO_BASE_URL": "http://172.16.3.178:5173/api"
+      "EXPO_BASE_URL": "http://172.16.3.178:5173/api",
+      "GENAI_KEY": "AIzaSyCo2L7bGOz52PjrPWtMcFU2cK_6_LgyysQ"
     },
     "version": "1.0.0",
     "orientation": "portrait",

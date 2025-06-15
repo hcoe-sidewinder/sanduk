@@ -2,11 +2,13 @@ import axios, { AxiosError } from "axios";
 import Constants from "expo-constants";
 
 const BASE_API_URL = Constants.expoConfig?.extra?.EXPO_BASE_URL;
+const GENAI_KEY = Constants.expoConfig?.extra?.GENAI_KEY;
 if (!BASE_API_URL) {
   throw new Error("BASE_URL is not defined");
 }
 
 console.log(BASE_API_URL);
+
 
 export const api = axios.create({
   baseURL: BASE_API_URL,
