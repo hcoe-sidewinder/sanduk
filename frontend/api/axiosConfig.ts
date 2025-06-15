@@ -1,6 +1,9 @@
 import axios, { AxiosError } from "axios";
 import Constants from "expo-constants";
 
+// const BASE_API_URL = Constants.expoConfig?.extra?.EXPO_BASE_URL;
+// const BASE_API_URL = "http://172.16.3.170:5173/api";
+
 const BASE_API_URL = Constants.expoConfig?.extra?.EXPO_BASE_URL;
 const GENAI_KEY = Constants.expoConfig?.extra?.GENAI_KEY;
 if (!BASE_API_URL) {

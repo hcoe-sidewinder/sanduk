@@ -120,7 +120,14 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
     animateBlob1();
     animateBlob2();
     animateBlob3();
-  }, []);
+  }, [
+    blob1Position,
+    blob1Scale,
+    blob2Position,
+    blob2Scale,
+    blob3Position,
+    blob3Scale,
+  ]);
 
   return (
     <View style={styles.container}>

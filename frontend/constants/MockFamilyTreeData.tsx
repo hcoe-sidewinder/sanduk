@@ -3,10 +3,6 @@ interface TreeNode {
   children?: TreeNode[];
 }
 
-interface FamilyTreeProps {
-  data: TreeNode;
-}
-
 export const familyTreeData: TreeNode = {
   name: "Family Root",
   children: [
