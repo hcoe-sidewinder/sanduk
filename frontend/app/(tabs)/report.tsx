@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { getData } from "./home";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const COLORS = {
   primary: "#bcc4f3",
@@ -21,51 +22,6 @@ const COLORS = {
   textSecondary: "#4b4e6d",
   cover: "#e0e3ff",
 };
-
-// const mockReports: ILabReport[] = [
-//   {
-//     _id: "1",
-//     testTitle: "Urine Test",
-//     date: "2025-06-10",
-//     sampleNo: "UR12345",
-//     tests: [
-//       {
-//         testName: "Color",
-//         result: "Light Yellow",
-//       },
-//       {
-//         testName: "Sugar",
-//         result: "Nil",
-//         unit: "mg/dL",
-//         referenceRange: "<50 = Normal, 50 = Trace, 100 = 1+",
-//       },
-//       {
-//         testName: "pH",
-//         result: "5.00",
-//       },
-//     ],
-//   },
-//   {
-//     _id: "2",
-//     testTitle: "Blood Test",
-//     date: "2025-06-01",
-//     sampleNo: "BL67890",
-//     tests: [
-//       {
-//         testName: "Hemoglobin",
-//         result: "13.5",
-//         unit: "g/dL",
-//         referenceRange: "12 - 16",
-//       },
-//       {
-//         testName: "WBC Count",
-//         result: "7000",
-//         unit: "cells/mcL",
-//         referenceRange: "4500 – 11000",
-//       },
-//     ],
-//   },
-// ];
 
 export interface ITest {
   testName: string;
@@ -105,6 +61,7 @@ const Report = () => {
           },
         });
         setLabReports(response.data.data);
+        await AsyncStorage.setItem("labReports", labReports);
       } catch (error) {
         const message = handleApiError(error as Error);
         console.log(message.message);

@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import {
   View,
@@ -5,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 
 type TestResult = {
@@ -76,13 +78,17 @@ const ReportDisplay: React.FC<ReportProps> = ({ report, onBack }) => {
             onPress={onBack}
             style={[styles.button, styles.cancelButton]}
           >
-            <Text style={styles.cancelText}>Cancel</Text>
+            <Text style={styles.cancelText} onPress={onBack}>
+              Cancel
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={onBack}
             style={[styles.button, styles.saveButton]}
           >
-            <Text style={styles.buttonText}>Save</Text>
+            <Text style={styles.buttonText} onPress={onBack}>
+              Save
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
