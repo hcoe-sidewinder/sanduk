@@ -45,10 +45,6 @@ const HomeScreen: React.FC = () => {
     await clearAsyncStorage();
   };
 
-  const handleAddMemberClick = () => {
-    router.replace("./newMem");
-  };
-
   return (
     <AnimatedBackground>
       <ScrollView style={styles.container}>

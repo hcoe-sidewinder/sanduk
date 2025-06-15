@@ -44,18 +44,6 @@ export default function TabsLayout() {
           href: null,
         }}
       />
-      <Tabs.Screen
-        name="newMem"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="addInformation"
-        options={{
-          href: null,
-        }}
-      />
     </Tabs>
   );
 }
