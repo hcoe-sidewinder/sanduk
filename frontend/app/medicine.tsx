@@ -1,99 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
-  FlatList,
   Alert,
   StyleSheet,
   ScrollView,
+  KeyboardAvoidingView,
 } from "react-native";
+import { getData } from "./(tabs)/home";
+import { api, handleApiError } from "@/api/axiosConfig";
+import InputField from "@/components/InputField";
+import { router } from "expo-router";
 
 const ALL_FORMULATION = ["TABLET", "CAPSULE", "LIQUID", "INJECTION"];
 
-const MedicinePrescriptionPage = () => {
-  const [medicineEntries, setMedicineEntries] = useState([
-    {
-      id: Date.now(),
-      formulation: "",
-      name: "",
-      strength: "",
-      frequency: "",
-      duration: "",
-    },
-  ]);
-
-  const addNewMedicineEntry = () => {
-    const newEntry = {
-      id: Date.now(),
-      formulation: "",
-      name: "",
-      strength: "",
-      frequency: "",
-      duration: "",
-    };
-    setMedicineEntries([...medicineEntries, newEntry]);
-  };
-
-  const removeMedicineEntry = (id: number) => {
-    if (medicineEntries.length > 1) {
-      setMedicineEntries(medicineEntries.filter((entry) => entry.id !== id));
-    } else {
-      Alert.alert("Error", "At least one medicine entry is required");
-    }
-  };
-
-  const updateMedicineEntry = (id: number, field: string, value: string) => {
-    setMedicineEntries(
-      medicineEntries.map((entry) =>
-        entry.id === id ? { ...entry, [field]: value } : entry
-      )
-    );
-  };
-
-  const validateAndSavePrescription = () => {
-    const invalidEntries = medicineEntries.filter(
-      (entry) =>
-        !entry.formulation ||
-        !entry.name ||
-        !entry.strength ||
-        !entry.frequency ||
-        !entry.duration
-    );
-
-    if (invalidEntries.length > 0) {
-      Alert.alert("Error", "Please fill all fields in all medicine entries");
-      return;
-    }
-
-    // Prepare data for backend (array of medicine objects)
-    const prescriptionData = medicineEntries.map(
-      ({ id, ...medicine }) => medicine
-    );
-
-    Alert.alert("Success", "Prescription saved successfully!");
-    console.log("Prescription Data (Array):", prescriptionData);
-
-    // Here you would send prescriptionData to your backend
-    // Example: await savePrescriptionToBackend(prescriptionData);
-  };
-
-  const FormulationButton = ({
+// Memoized FormulationButton component to prevent unnecessary re-renders
+const FormulationButton = memo(
+  ({
     formulation,
     entryId,
     isSelected,
+    onPress,
   }: {
     formulation: string;
     entryId: number;
     isSelected: boolean;
+    onPress: (entryId: number, formulation: string) => void;
   }) => (
     <TouchableOpacity
       style={[
         styles.formulationButton,
         isSelected && styles.selectedFormulation,
       ]}
-      onPress={() => updateMedicineEntry(entryId, "formulation", formulation)}
+      onPress={() => onPress(entryId, formulation)}
     >
       <Text
         style={[
@@ -104,22 +44,35 @@ const MedicinePrescriptionPage = () => {
         {formulation}
       </Text>
     </TouchableOpacity>
-  );
+  )
+);
 
-  const MedicineEntryForm = ({
+FormulationButton.displayName = "FormulationButton";
+
+// Memoized MedicineEntryForm component to prevent unnecessary re-renders
+const MedicineEntryForm = memo(
+  ({
     entry,
     index,
+    canRemove,
+    onUpdateEntry,
+    onRemoveEntry,
+    onFormulationPress,
   }: {
     entry: any;
     index: number;
+    canRemove: boolean;
+    onUpdateEntry: (id: number, field: string, value: string) => void;
+    onRemoveEntry: (id: number) => void;
+    onFormulationPress: (entryId: number, formulation: string) => void;
   }) => (
     <View style={styles.medicineEntryContainer}>
       <View style={styles.entryHeader}>
         <Text style={styles.entryTitle}>Medicine #{index + 1}</Text>
-        {medicineEntries.length > 1 && (
+        {canRemove && (
           <TouchableOpacity
             style={styles.removeEntryButton}
-            onPress={() => removeMedicineEntry(entry.id)}
+            onPress={() => onRemoveEntry(entry.id)}
           >
             <Text style={styles.removeEntryButtonText}>Remove</Text>
           </TouchableOpacity>
@@ -134,79 +87,182 @@ const MedicinePrescriptionPage = () => {
             formulation={formulation}
             entryId={entry.id}
             isSelected={entry.formulation === formulation}
+            onPress={onFormulationPress}
           />
         ))}
       </View>
 
-      <Text style={styles.label}>Medicine Name *</Text>
-      <TextInput
-        style={styles.input}
+      <InputField
+        label="Medicine Name"
         value={entry.name}
-        onChangeText={(text) => updateMedicineEntry(entry.id, "name", text)}
+        onChangeText={(text) => onUpdateEntry(entry.id, "name", text)}
         placeholder="Enter medicine name"
-        placeholderTextColor="#999"
+        secure={false}
       />
 
-      <Text style={styles.label}>Strength *</Text>
-      <TextInput
-        style={styles.input}
+      <InputField
+        label="Strength"
         value={entry.strength}
-        onChangeText={(text) => updateMedicineEntry(entry.id, "strength", text)}
+        onChangeText={(text) => onUpdateEntry(entry.id, "strength", text)}
         placeholder="e.g., 500mg, 10ml"
-        placeholderTextColor="#999"
+        secure={false}
       />
 
-      <Text style={styles.label}>Frequency *</Text>
-      <TextInput
-        style={styles.input}
+      <InputField
+        label="Frequency"
         value={entry.frequency}
-        onChangeText={(text) =>
-          updateMedicineEntry(entry.id, "frequency", text)
-        }
+        onChangeText={(text) => onUpdateEntry(entry.id, "frequency", text)}
         placeholder="e.g., Twice daily, TID"
-        placeholderTextColor="#999"
+        secure={false}
       />
 
-      <Text style={styles.label}>Duration *</Text>
-      <TextInput
-        style={styles.input}
+      <InputField
+        label="Duration"
         value={entry.duration}
-        onChangeText={(text) => updateMedicineEntry(entry.id, "duration", text)}
+        onChangeText={(text) => onUpdateEntry(entry.id, "duration", text)}
         placeholder="e.g., 7 days, 2 weeks"
-        placeholderTextColor="#999"
+        secure={false}
       />
     </View>
+  )
+);
+
+MedicineEntryForm.displayName = "MedicineEntryForm";
+
+const MedicinePrescriptionPage = () => {
+  const [medicineEntries, setMedicineEntries] = useState([
+    {
+      id: Date.now(),
+      formulation: "",
+      name: "",
+      strength: "",
+      frequency: "",
+      duration: "",
+    },
+  ]);
+
+  const handleAddNewMedicineEntry = useCallback(() => {
+    const newEntry = {
+      id: Date.now(),
+      formulation: "",
+      name: "",
+      strength: "",
+      frequency: "",
+      duration: "",
+    };
+    setMedicineEntries((prevEntries) => [...prevEntries, newEntry]);
+  }, []);
+
+  const handleRemoveMedicineEntry = useCallback((id: number) => {
+    setMedicineEntries((prevEntries) => {
+      if (prevEntries.length > 1) {
+        return prevEntries.filter((entry) => entry.id !== id);
+      } else {
+        Alert.alert("Error", "At least one medicine entry is required");
+        return prevEntries;
+      }
+    });
+  }, []);
+
+  const handleUpdateMedicineEntry = useCallback(
+    (id: number, field: string, value: string) => {
+      setMedicineEntries((prevEntries) =>
+        prevEntries.map((entry) =>
+          entry.id === id ? { ...entry, [field]: value } : entry
+        )
+      );
+    },
+    []
   );
 
+  const handleFormulationPress = useCallback(
+    (entryId: number, formulation: string) => {
+      handleUpdateMedicineEntry(entryId, "formulation", formulation);
+    },
+    [handleUpdateMedicineEntry]
+  );
+
+  const validateAndSavePrescription = useCallback(async () => {
+    const invalidEntries = medicineEntries.filter(
+      (entry) =>
+        !entry.formulation ||
+        !entry.name ||
+        !entry.strength ||
+        !entry.frequency ||
+        !entry.duration
+    );
+
+    if (invalidEntries.length > 0) {
+      Alert.alert("Error", "Please fill all fields in all medicine entries");
+      return;
+    }
+
+    try {
+      const user = await getData("auth");
+      const doctor = await getData("doctorId");
+      console.log("user and doctorid", user._id, doctor);
+
+      const sentData = medicineEntries.map((medicine) => ({
+        formulation: medicine.formulation,
+        name: medicine.name,
+        duration: medicine.duration,
+        strength: medicine.strength,
+        frequency: medicine.frequency,
+      }));
+
+      const final = { doctor: doctor, medicines: sentData };
+
+      const response = await api.post(`/users/${user._id}/medicines`, final, {
+        headers: { Authorization: `Bearer ${user.accessToken}` },
+      });
+
+      Alert.alert("Success", "Prescription saved successfully!");
+      router.replace("/home");
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      const msg = handleApiError(error as Error);
+      Alert.alert("Error", msg.message);
+    }
+  }, [medicineEntries]);
+
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Medicine Prescription Form</Text>
+    <KeyboardAvoidingView behavior="padding" className="flex-1">
+      {" "}
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>Medicine Prescription Form</Text>
 
-      {/* Medicine Entries */}
-      <View style={styles.entriesContainer}>
-        {medicineEntries.map((entry, index) => (
-          <MedicineEntryForm key={entry.id} entry={entry} index={index} />
-        ))}
-      </View>
+        <View style={styles.entriesContainer}>
+          {medicineEntries.map((entry, index) => (
+            <MedicineEntryForm
+              key={entry.id}
+              entry={entry}
+              index={index}
+              canRemove={medicineEntries.length > 1}
+              onUpdateEntry={handleUpdateMedicineEntry}
+              onRemoveEntry={handleRemoveMedicineEntry}
+              onFormulationPress={handleFormulationPress}
+            />
+          ))}
+        </View>
 
-      {/* Add New Medicine Entry Button */}
-      <TouchableOpacity
-        style={styles.addEntryButton}
-        onPress={addNewMedicineEntry}
-      >
-        <Text style={styles.addEntryButtonText}>+ Add Another Medicine</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.addEntryButton}
+          onPress={handleAddNewMedicineEntry}
+        >
+          <Text style={styles.addEntryButtonText}>+ Add Another Medicine</Text>
+        </TouchableOpacity>
 
-      {/* Save All Prescriptions Button */}
-      <TouchableOpacity
-        style={styles.saveButton}
-        onPress={validateAndSavePrescription}
-      >
-        <Text style={styles.saveButtonText}>
-          Save All Prescriptions ({medicineEntries.length})
-        </Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity
+          style={styles.saveButton}
+          onPress={validateAndSavePrescription}
+        >
+          <Text style={styles.saveButtonText}>
+            Save All Prescriptions ({medicineEntries.length})
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -294,15 +350,6 @@ const styles = StyleSheet.create({
   selectedFormulationText: {
     color: "#6368ba",
     fontWeight: "600",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#bcc4f3",
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: "white",
-    marginBottom: 10,
   },
   addEntryButton: {
     backgroundColor: "#28a745",
