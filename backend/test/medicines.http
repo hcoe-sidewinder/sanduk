@@ -1,0 +1,52 @@
+@host = http://{{hostname}}:{{port}}/api
+@hostname = localhost
+@port = 5173
+
+
+### getUsers
+
+GET /users HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+### newSession
+
+POST /users/sessions HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "nidNo": "ggjkmh",
+  "password": "password"
+}
+
+### getMedicine
+
+GET /users/@me/medicines HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+### newMedicine
+
+POST /users/@me/medicines HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{newSession.response.body.$.data.accessToken}}
+Content-Type: application/json
+Host: {{host}}
+
+{
+  "doctor": "684ce95ee63b560a2790f2ee",
+  "medicines": [
+    {
+      "formulation": "LIQUID",
+      "name": "Methamphetamine",
+      "strength": "500mg",
+      "frequency": "twice a day",
+      "duration": "77 days"
+    }
+  ]
+}
